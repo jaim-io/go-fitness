@@ -9,3 +9,11 @@ Run `make setup-git-hooks` in the `root` directory (`~/`) to setup up git hooks.
 `MySQL` for the database. <br />
 `GitHub` as the repository. <br />
 `GitHub Actions` and `Docker` for CI/CD. <br />
+
+## Backend environment variables
+`DB_NAME` <br />
+`DB_USER` <br />
+`DB_PASSWORD` <br />
+`DB_HOST` <br />
+`DB_PORT` <br />
+`DB_PROTOCOL` <br />
