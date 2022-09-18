@@ -15,11 +15,12 @@ func Init() (*sql.DB, error) {
 		Passwd:               os.Getenv("MYSQL_PASSWORD"),
 		Net:                  os.Getenv("MYSQL_PROTOCOL"),
 		Addr:                 fmt.Sprintf("%s:%s", os.Getenv("MYSQL_HOST"), os.Getenv("MYSQL_PORT")),
-		DBName:               os.Getenv("MYSQL_DB_NAME"),
+		DBName:               os.Getenv("MYSQL_DATABASE"),
 		AllowNativePasswords: true,
 	}
 
 	log.Print("Connecting to database ...")
+	log.Print(cfg.FormatDSN())
 	db, err := sql.Open("mysql", cfg.FormatDSN())
 	if err != nil {
 		log.Printf("Error connecting to the database: %s\n", err.Error())

@@ -34,4 +34,5 @@ func main() {
 	{
 		api.GET("/exercises", env.GetAllExercises)
 	}
+	router.Run("0.0.0.0:8080")
 }

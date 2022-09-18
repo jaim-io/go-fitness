@@ -3,16 +3,11 @@ services:
   mysql:
     image: mysql:8.0
     container_name: jaimio-mysql
-    # env_file:
-      # - ./.env
-    environment:
-      - MYSQL_ROOT_PASSWORD="root"
-      - MYSQL_DATABASE="jaimio"
-      - MYSQL_USER="root"
-      - MYSQL_PASSWORD="root"
+    env_file:
+      - ./.env
     volumes:
       - ./mysql-data:/var/lib/mysql:rw
-      - ./pkg/db/create-tables.sql:/docker-entrypoint-initdb.d/create-tables.sql:rw
+      - ./pkg/db/create-tables.sql:/docker-entrypoint-initdb.d/create-tables.sql
     ports:
       - 3306:3306
     expose:
@@ -31,3 +26,7 @@ services:
       - ./.env
     ports: 
       - 8080:8080
+    expose:
+      - 8080
+    links:
+      - mysql:mysql
