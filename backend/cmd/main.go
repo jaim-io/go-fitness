@@ -4,13 +4,20 @@ import (
 	"log"
 
 	"github.com/Jaim010/jaim-io/backend/pkg/controllers"
-	"github.com/Jaim010/jaim-io/backend/pkg/database"
+	database "github.com/Jaim010/jaim-io/backend/pkg/db"
 	"github.com/Jaim010/jaim-io/backend/pkg/models"
+
+	// "github.com/joho/godotenv"
 
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
+	// err := godotenv.Load("../.env")
+	// if err != nil {
+	// 	log.Fatalf("Error loading .env file: %s\n", err.Error())
+	// }
+
 	db, err := database.Init()
 	if err != nil {
 		log.Fatalf("Failed to connect to database. Error: %s", err)
@@ -25,6 +32,6 @@ func main() {
 	router.GET("/health", controllers.GetHealth)
 	api := router.Group("/api")
 	{
-		api.GET("/exercises")
+		api.GET("/exercises", env.GetAllExercises)
 	}
 }

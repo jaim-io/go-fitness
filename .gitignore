@@ -2,7 +2,6 @@
 *.vscode
 
 ## Backend-Golang
-
 # Binaries for programs and plugins
 *.exe
 *.exe~
@@ -20,9 +19,9 @@
 # vendor/
 
 /bin/
+/backend/mysql-data
 
 ## Frontend-React
-
 # dependencies
 /frontend/node_modules
 /frontend/.pnp

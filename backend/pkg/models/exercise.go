@@ -5,7 +5,7 @@ import (
 )
 
 type Exercise struct {
-	Id   int32  `json:"id"`
+	Id   uint32 `json:"id"`
 	Name string `json:"name"`
 }
 
@@ -39,7 +39,7 @@ func (c ExerciseContext) GetAll() ([]Exercise, error) {
 	return exs, nil
 }
 
-func (c ExerciseContext) GetById(id int32) (Exercise, error) {
+func (c ExerciseContext) GetById(id uint32) (Exercise, error) {
 	var ex Exercise
 
 	row := c.DB.QueryRow("SELECT * FROM exercises WHERE id=$1", id)
@@ -49,7 +49,7 @@ func (c ExerciseContext) GetById(id int32) (Exercise, error) {
 	return ex, nil
 }
 
-func (c ExerciseContext) Update(id int32, exercise Exercise) error {
+func (c ExerciseContext) Update(id uint32, exercise Exercise) error {
 	_, err := c.DB.Exec(`
 		UPDATE exercises
 		SET name=$1
