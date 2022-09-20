@@ -32,6 +32,9 @@ jobs:
     runs-on: ubuntu-latest
         
     steps:
+      - name: test
+        run: echo `pwd`
+          
       - uses: actions/checkout@master
       - name: Run Snyk to check for vulnerabilities
         uses: snyk/actions/golang@master
@@ -39,9 +42,7 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
           command: test 
-      - name: test
-        run: echo `ll`
-          
+
   code-security:
     runs-on: ubuntu-latest
         
