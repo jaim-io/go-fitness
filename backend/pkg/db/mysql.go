@@ -20,7 +20,6 @@ func Init() (*sql.DB, error) {
 	}
 
 	log.Print("Connecting to database ...")
-	log.Print(cfg.FormatDSN())
 	db, err := sql.Open("mysql", cfg.FormatDSN())
 	if err != nil {
 		log.Printf("Error connecting to the database: %s\n", err.Error())
