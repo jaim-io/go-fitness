@@ -30,9 +30,6 @@ jobs:
          
   manifest-security:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./backend/
         
     steps:
       - uses: actions/checkout@master
@@ -41,13 +38,11 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          command: test --json
+          command: test 
+        working-directory: ./backend/
           
   code-security:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./backend/
         
     steps:
       - uses: actions/checkout@master
@@ -57,3 +52,4 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
           command: code test
+        working-directory: ./backend/
