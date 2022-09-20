@@ -28,7 +28,7 @@ jobs:
     - name: Test
       run: go test -v ./...
          
-  security:
+  manifest-security:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -41,4 +41,19 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          command: --json
+          command: test --json
+          
+  code-security:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend/
+        
+    steps:
+      - uses: actions/checkout@master
+      - name: Run Snyk to check for vulnerabilities
+        uses: snyk/actions/golang@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          command: code test
