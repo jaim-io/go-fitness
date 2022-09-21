@@ -1,11 +1,98 @@
-basePath: /api/v1/
+basePath: /api/v1
+definitions:
+  httputil.HTTPError:
+    properties:
+      code:
+        example: 400
+        type: integer
+      message:
+        example: status bad request
+        type: string
+    type: object
+  models.Exercise:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
 host: localhost:8080
 info:
-  contact: {}
+  contact:
+    email: jameyschaap06@gmail.com
+    name: Jamey Schaap
+    url: https://www.linkedin.com/in/jamey-schaap/
   description: My portfolio website
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   title: Jaim-io
-paths: {}
+  version: "1.0"
+paths:
+  /exercise:
+    get:
+      consumes:
+      - application/json
+      description: get exercises
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Exercise'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              $ref: '#/definitions/httputil.HTTPError'
+            type: array
+        "404":
+          description: Not Found
+          schema:
+            items:
+              $ref: '#/definitions/httputil.HTTPError'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+      summary: Get exercises
+      tags:
+      - exercises
+  /exercise/{id}:
+    get:
+      consumes:
+      - application/json
+      description: get exervise by ID
+      parameters:
+      - description: Exercise ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Exercise'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+      summary: Get exercise
+      tags:
+      - exercises
 swagger: "2.0"

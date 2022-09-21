@@ -42,7 +42,7 @@ func (c ExerciseContext) GetAll() ([]Exercise, error) {
 func (c ExerciseContext) GetById(id uint32) (Exercise, error) {
 	var ex Exercise
 
-	row := c.DB.QueryRow("SELECT * FROM exercises WHERE id=$1", id)
+	row := c.DB.QueryRow("SELECT * FROM exercises WHERE id = ?", id)
 	if err := row.Scan(&ex.Id, &ex.Name); err != nil {
 		return ex, err
 	}
@@ -52,7 +52,7 @@ func (c ExerciseContext) GetById(id uint32) (Exercise, error) {
 func (c ExerciseContext) Update(id uint32, exercise Exercise) error {
 	_, err := c.DB.Exec(`
 		UPDATE exercises
-		SET name=$1
+		SET name = ? 
 		`, exercise.Name,
 	)
 
@@ -65,7 +65,7 @@ func (c ExerciseContext) Update(id uint32, exercise Exercise) error {
 func (c ExerciseContext) Add(exercise Exercise) (Exercise, error) {
 	_, err := c.DB.Exec(`
 		INSERT INTO exercises (name)
-		VALUES ($1)`, exercise.Name,
+		VALUES (?)`, exercise.Name,
 	)
 
 	if err != nil {
@@ -77,7 +77,7 @@ func (c ExerciseContext) Add(exercise Exercise) (Exercise, error) {
 func (c ExerciseContext) Remove(exercise Exercise) error {
 	_, err := c.DB.Exec(`
 		DELETE FROM exercises 
-		WHERE id=$1 AND name=$2`,
+		WHERE id = ? AND name = ?`,
 		exercise.Id, exercise.Name,
 	)
 	if err != nil {

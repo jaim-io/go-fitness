@@ -13,19 +13,19 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
-// @title 					Jaim-io
-// @version					1.0
-// @description     My portfolio website
+// @title       Jaim-io
+// @version     1.0
+// @description My portfolio website
 
-// @contact.name		Jamey Schaap
-// @contact.url			https://www.linkedin.com/in/jamey-schaap/
-// @contact.email		jameyschaap06@gmail.com
+// @contact.name  Jamey Schaap
+// @contact.url   https://www.linkedin.com/in/jamey-schaap/
+// @contact.email jameyschaap06@gmail.com
 
-// @license.name  Apache 2.0
-// @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
+// @license.name Apache 2.0
+// @license.url  http://www.apache.org/licenses/LICENSE-2.0.html
 
-// @host      localhost:8080
-// @BasePath  /api/v1
+// @host     localhost:8080
+// @BasePath /api/v1
 func main() {
 
 	db, err := database.Init()

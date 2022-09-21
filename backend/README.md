@@ -8,4 +8,9 @@
 `MYSQL_PROTOCOL` <br />
 
 ## Swagger docs
-In `jaim-io/backend` run `swag init -d ./cmd`.
+First install the Swagger CLI called `swag`.
+```
+go get -u github.com/swaggo/swag/cmd/swag
+go install github.com/swaggo/swag/cmd/swag@latest
+```
+Then run `swag init -d cmd --pd pkg/controller` in `~/jaim-io/backend`.

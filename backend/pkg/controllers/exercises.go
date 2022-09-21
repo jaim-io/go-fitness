@@ -6,22 +6,23 @@ import (
 	"net/http"
 	"strconv"
 
+	_ "github.com/Jaim010/jaim-io/backend/pkg/httputil"
 	"github.com/Jaim010/jaim-io/backend/pkg/models"
 
 	"github.com/gin-gonic/gin"
 )
 
 // GetAllExercises godoc
-// @Summary			 Get exercises
-// @Description  get exercises
-// @Tags				 exercises
-// @Accept			 json
-// @Produce 		 json
-// @Success			 200 {array} 	models.Exercise
-// @Failure 		 400 {array} 	httputil.HTTPError
-// @Failure 		 404 {array}	httputil.HTTPError
-// @Failure 		 500 {object}	httputil.HTTPError
-// @Router			 /exercise [get]
+// @Summary     Get exercises
+// @Description get exercises
+// @Tags        exercises
+// @Accept      json
+// @Produce     json
+// @Success     200 {array}   models.Exercise
+// @Failure     400 {array}   httputil.HTTPError
+// @Failure     404 {array}  httputil.HTTPError
+// @Failure     500 {object} httputil.HTTPError
+// @Router      /exercise [get]
 func (env *Env) GetAllExercises(c *gin.Context) {
 	exs, err := env.ExerciseContext.GetAll()
 	if err != nil {
@@ -32,17 +33,17 @@ func (env *Env) GetAllExercises(c *gin.Context) {
 }
 
 // GetExerciseById godoc
-// @Summary			 Get exercise
-// @Description  get exervise by ID
-// @Tags				 exercises
-// @Accept			 json
-// @Produce			 json
-// @Param				 id	path			int	true	"Exercise ID"
-// @Success			 200	{object}	models.Exercise
-// @Failure      400  {object}  httputil.HTTPError
-// @Failure      404  {object}  httputil.HTTPError
-// @Failure      500  {object}  httputil.HTTPError
-// @Router			 /exercise/{id} [get]
+// @Summary     Get exercise
+// @Description get exervise by ID
+// @Tags        exercises
+// @Accept      json
+// @Produce     json
+// @Param       id  path       int true "Exercise ID"
+// @Success     200 {object} models.Exercise
+// @Failure     400 {object} httputil.HTTPError
+// @Failure     404 {object} httputil.HTTPError
+// @Failure     500 {object} httputil.HTTPError
+// @Router      /exercise/{id} [get]
 func (env *Env) GetExerciseById(c *gin.Context) {
 	idStr := c.Param("id")
 
