@@ -4,10 +4,10 @@ services:
     image: mysql:8.0
     container_name: jaimio-mysql
     env_file:
-      - ./.env
+      - ./backend/.env
     volumes:
-      - ./mysql-data:/var/lib/mysql:rw
-      - ./pkg/db/create-tables.sql:/docker-entrypoint-initdb.d/create-tables.sql
+      - ./backend/mysql-data:/var/lib/mysql:rw
+      - ./backend/pkg/db/create-tables.sql:/docker-entrypoint-initdb.d/create-tables.sql
     ports:
       - 3306:3306
     expose:
@@ -19,14 +19,27 @@ services:
       - mysql
     image: jaimio-api:latest
     build:
-      context: .
+      context: ./backend/
       dockerfile: Dockerfile
     container_name: jaimio-api
     env_file:
-      - ./.env
+      - ./backend/.env
     ports: 
       - 8080:8080
     expose:
       - 8080
     links:
       - mysql:mysql
+
+  web:
+    depends_on:
+      - api
+    image: jaimio-web:latest
+    build:
+      context: ./frontend/
+      dockerfile: Dockerfile
+    container_name: jaimio-web
+    ports: 
+      - 3000:3000
+    expose:
+      - 3000

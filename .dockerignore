@@ -1,3 +1,5 @@
-/tests/
+/backend/tests/
+/backend/bin/
+/frontend/node_modules/
+/frontend/build/
 /.vscode/
-/bin/
