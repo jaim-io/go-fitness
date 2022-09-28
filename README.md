@@ -5,7 +5,7 @@ Run `make setup-git-hooks` in the `root` directory (`~/`) to setup up git hooks.
 
 ## The stack
 `Golang` for the backend. <br />
-`React` with `Typescript` and `Yarn` for the frontend. <br />
+`React` with `Typescript`, `Tailwind CSS` and `Yarn` for the frontend. <br />
 `MySQL` for the database. <br />
 `GitHub` as the repository. <br />
 `GitHub Actions` and `Docker` for CI/CD. <br />
