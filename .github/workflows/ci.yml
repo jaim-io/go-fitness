@@ -59,6 +59,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - uses: actions/checkout@master
+      - uses: snyk/actions/setup@master
+    
       - name: Set up Go 1.18
         uses: actions/setup-go@v3
         with:
@@ -70,8 +73,7 @@ jobs:
         with:
           node-version: 18.x
           working-directory: ./frontend/
-    
-      - uses: actions/checkout@master
+  
       - name: Run Snyk to check for vulnerabilities
         run: snyk test --all-projects --detection-depth=99 --target-dir ./backend/ --target-dir ./frontend/
         env:
