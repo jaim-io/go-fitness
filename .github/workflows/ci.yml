@@ -59,21 +59,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Set up Go 1.18
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.18
+          working-directory: ./backend/
+          
+      - name: Set up Node.js 18.x
+        uses: actions/setup-node@v3.4.1
+        with:
+          node-version: 18.x
+          working-directory: ./frontend/
+    
       - uses: actions/checkout@master
-      - name: Run Snyk to check for Golang vulnerabilities
-        uses: snyk/actions/golang@master
+      - name: Run Snyk to check for vulnerabilities
+        run: snyke test --all-projects --detection-depth=99 --target-dir ./backend/ --target-dir ./frontend/
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-          command: test --target-dir ./backend/
-
-      - uses: actions/checkout@master
-      - name: Run Snyk to check for Node vulnerabilities
-        uses: snyk/actions/node@master
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-          command: test --target-dir ./frontend/
 
   code-security:
     runs-on: ubuntu-latest
