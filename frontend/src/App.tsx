@@ -1,15 +1,14 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { Outlet } from "react-router-dom";
+import "./App.css";
+import NavigationBar from "./components/NavigationBar";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p className="text-3xl font-bold underline"> Hello world!</p>
-      </header>
-    </div>
+    <>
+      <NavigationBar />
+      <Outlet />
+    </>
   );
 }
 
