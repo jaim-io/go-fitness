@@ -5,16 +5,14 @@ import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
 const navigation = [
   { name: "Dashboard", href: "/", current: true },
-  { name: "Exercises", href: "/exerises/", current: false },
+  { name: "Exercises", href: "/exercise", current: false },
   { name: "Projects", href: "#", current: false },
   { name: "Calendar", href: "#", current: false },
 ];
 
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(" ");
-}
+const classNames = (...classes: string[]) => classes.filter(Boolean).join(" ");
 
-export default function NavigationBar() {
+const NavigationBar = () => {
   return (
     <Disclosure as="nav" className="bg-gray-800">
       {({ open }) => (
@@ -166,4 +164,6 @@ export default function NavigationBar() {
       )}
     </Disclosure>
   );
-}
+};
+
+export default NavigationBar;

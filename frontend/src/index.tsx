@@ -1,33 +1,31 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
-import ErrorPage from './pages/ErrorPage';
-import Exercises from './routes/Exercises';
-
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <App />,
-    errorElement: <ErrorPage />,
-    children: [
-      {
-        path: "/exercises/",
-        element: <Exercises />,
-      }
-    ]
-  }
-])
+import React from "react";
+import ReactDOM from "react-dom/client";
+import {
+  Route,
+  BrowserRouter,
+  Routes,
+} from "react-router-dom";
+import "./index.css";
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
+import Exercise from "./routes/Exercise";
+import { Exercises } from "./routes/Exercises";
 
 const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
+  document.getElementById("root") as HTMLElement
 );
 
 root.render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    {/* <RouterProvider router={router} /> */}
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<App />}>
+          <Route path="/exercise/:id" element={<Exercise />} />
+          <Route path="/exercise" element={<Exercises />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   </React.StrictMode>
 );
 

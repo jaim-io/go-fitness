@@ -1,26 +1,29 @@
 import { useEffect, useState } from "react";
+import { IExercise } from "../types/IExercise";
+import { IAPIResult } from "../types/IAPIResult";
 
-const endpoint = `${process.env.REACT_APP_API_BASE}/exercise`
+const endpoint = `${process.env.REACT_APP_API_BASE}/api/v1/exercise`;
 
-const useExercise = (id: number) => {
-  const [exercise, setExercise] = useState();
+const useExercise = (id: string): IAPIResult<IExercise> => {
+  const [exercise, setExercise] = useState<IExercise | undefined>();
+  const [error, setError] = useState<Error | undefined>();
 
   useEffect(() => {
     const request = fetch(`${endpoint}/${id}`);
     request
-      .then((apiResponse) => {
-        if (!apiResponse.ok) {
-          console.error(apiResponse.statusText)
+      .then((res) => {
+        if (!res.ok) {
+          setError(new Error(`${res.status}: ${res.statusText}`));
           return;
         }
-        return apiResponse.json();
+        return res.json();
       })
-      .then((apiResult) => {
-        setExercise(apiResult);
-      })
+      .then((result) => {
+        setExercise(result);
+      });
   }, [id]);
 
-  return exercise;
-}
+  return { result: exercise, error: error };
+};
 
 export default useExercise;
