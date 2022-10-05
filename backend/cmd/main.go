@@ -7,6 +7,7 @@ import (
 	"github.com/Jaim010/jaim-io/backend/pkg/controllers"
 	database "github.com/Jaim010/jaim-io/backend/pkg/db"
 	"github.com/Jaim010/jaim-io/backend/pkg/models"
+	"github.com/gin-contrib/cors"
 
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
@@ -38,6 +39,10 @@ func main() {
 	}
 
 	router := gin.Default()
+
+	config := cors.DefaultConfig()
+	config.AllowOrigins = []string{"http://localhost:3000"}
+	router.Use(cors.New(config))
 
 	router.GET("/health", controllers.GetHealth)
 	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
