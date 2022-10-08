@@ -131,8 +131,7 @@ func (env *Env) PostExercise(c *gin.Context) {
 		return
 	}
 
-	empty := newExercise == models.Exercise{}
-	if empty {
+	if empty := newExercise.Description == "" || newExercise.ImagePath == "" || newExercise.VideoLink == "" || len(newExercise.MuscleGroups) == 0; empty {
 		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "exercise fields can't be completely empty"})
 		return
 	}

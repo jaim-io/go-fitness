@@ -1,21 +1,41 @@
 package models
 
 import (
-	"database/sql"
+	"context"
+
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 type Exercise struct {
-	Id   uint32 `json:"id"`
-	Name string `json:"name"`
+	Id           uint32   `json:"id"`
+	Name         string   `json:"name"`
+	Description  string   `json:"description"`
+	MuscleGroups []string `json:"muscle_groups"`
+	ImagePath    string   `json:"image_path"`
+	VideoLink    string   `json:"video_link"`
 }
 
 // Create a custom ExerciseContext type which wraps the sql.DB connection pool.
 type ExerciseContext struct {
-	DB *sql.DB
+	DB *pgxpool.Pool
 }
 
 func (c ExerciseContext) GetAll() ([]Exercise, error) {
-	rows, err := c.DB.Query("SELECT * FROM exercises")
+	rows, err := c.DB.Query(context.Background(), `
+		SELECT 
+			e.id, 
+			name, 
+			description, 
+			ARRAY(
+				SELECT mg.name
+				FROM muscle_groups as mg 
+				JOIN exercise_muscle_groups as emg
+					ON mg.id=emg.muscle_group_id
+				WHERE emg.exercise_id=e.id) as "muscle_groups",
+			image_path, 
+			video_link 
+		FROM exercises as e
+	`)
 	if err != nil {
 		return nil, err
 	}
@@ -26,7 +46,7 @@ func (c ExerciseContext) GetAll() ([]Exercise, error) {
 	for rows.Next() {
 		var ex Exercise
 
-		if err := rows.Scan(&ex.Id, &ex.Name); err != nil {
+		if err := rows.Scan(&ex.Id, &ex.Name, &ex.Description, &ex.MuscleGroups, &ex.ImagePath, &ex.VideoLink); err != nil {
 			return nil, err
 		}
 		exs = append(exs, ex)
@@ -42,19 +62,33 @@ func (c ExerciseContext) GetAll() ([]Exercise, error) {
 func (c ExerciseContext) GetById(id uint32) (Exercise, error) {
 	var ex Exercise
 
-	row := c.DB.QueryRow("SELECT * FROM exercises WHERE id = ?", id)
-	if err := row.Scan(&ex.Id, &ex.Name); err != nil {
+	row := c.DB.QueryRow(context.Background(), `
+		SELECT 
+		id, 
+			name, 
+			description, 
+			ARRAY(
+				SELECT DISTINCT ON (mg.name) mg.name 
+				FROM muscle_groups as mg 
+				JOIN exercise_muscle_groups as emg
+				ON emg.exercise_id=$1) as "muscle_groups",
+			image_path, 
+			video_link 
+		FROM exercises 
+		WHERE id=$1;
+	`, id)
+	if err := row.Scan(&ex.Id, &ex.Name, &ex.Description, &ex.MuscleGroups, &ex.ImagePath, &ex.VideoLink); err != nil {
 		return ex, err
 	}
 	return ex, nil
 }
 
 func (c ExerciseContext) Update(id uint32, exercise Exercise) error {
-	_, err := c.DB.Exec(`
+	_, err := c.DB.Exec(context.Background(), `
 		UPDATE exercises
-		SET name = ? 
-		WHERE id = ?
-		`, exercise.Name, exercise.Id,
+		SET name=$1, SET description=$2, SET image_path=$3, SET video_link=$4
+		WHERE id=$5
+		`, exercise.Name, exercise.Description, exercise.ImagePath, exercise.VideoLink, exercise.Id,
 	)
 
 	if err != nil {
@@ -64,9 +98,9 @@ func (c ExerciseContext) Update(id uint32, exercise Exercise) error {
 }
 
 func (c ExerciseContext) Add(exercise Exercise) (Exercise, error) {
-	_, err := c.DB.Exec(`
-		INSERT INTO exercises (name)
-		VALUES (?)`, exercise.Name,
+	_, err := c.DB.Exec(context.Background(), `
+		INSERT INTO exercises (name, description, image_path, video_link)
+		VALUES ($1, $2, $3, $4)`, exercise.Name, exercise.Description, exercise.ImagePath, exercise.VideoLink,
 	)
 
 	if err != nil {
@@ -76,10 +110,10 @@ func (c ExerciseContext) Add(exercise Exercise) (Exercise, error) {
 }
 
 func (c ExerciseContext) Remove(exercise Exercise) error {
-	_, err := c.DB.Exec(`
+	_, err := c.DB.Exec(context.Background(), `
 		DELETE FROM exercises 
-		WHERE id = ? AND name = ?`,
-		exercise.Id, exercise.Name,
+		WHERE id=$1 AND name=$2 AND description=$3 AND image_path=$4, AND video_link=$5`,
+		exercise.Id, exercise.Name, exercise.Description, exercise.ImagePath, exercise.VideoLink,
 	)
 	if err != nil {
 		return err

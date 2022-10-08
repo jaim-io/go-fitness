@@ -28,8 +28,8 @@ func checkEqual[K any](t *testing.T, expected, actual K) {
 func TestGetAllExercises(t *testing.T) {
 	// Arrange
 	expectedExs := []models.Exercise{
-		{Name: "Barbell bench press", Id: 1},
-		{Name: "Bulgarian split squat", Id: 2},
+		{Name: "Barbell bench press", Id: 1, Description: "Lorem ipsum"},
+		{Name: "Bulgarian split squat", Id: 2, Description: "Lorem ipsum"},
 	}
 
 	env := Env{ExerciseContext: &mocks.MockExerciseContext{}}
@@ -57,7 +57,7 @@ type getIdExerciseTest struct {
 }
 
 var getIdExerciseTests = []getIdExerciseTest{
-	{GivenId: "1", ExpectedExercise: models.Exercise{Id: 1, Name: "Barbell bench press"}, ExpectedCode: 200},
+	{GivenId: "1", ExpectedExercise: models.Exercise{Id: 1, Name: "Barbell bench press", Description: "Lorem ipsum"}, ExpectedCode: 200},
 	{GivenId: "-1", ExpectedExercise: models.Exercise{}, ExpectedCode: 400},
 	{GivenId: "a", ExpectedExercise: models.Exercise{}, ExpectedCode: 400},
 	{GivenId: "1000", ExpectedExercise: models.Exercise{}, ExpectedCode: 404},
@@ -93,10 +93,10 @@ type putExerciseTest struct {
 }
 
 var putExerciseTests = []putExerciseTest{
-	{GivenId: "1", GivenExerciseData: `{"id": 1, "name": "Lunges"}`, ExpectedCode: 204},
-	{GivenId: "2", GivenExerciseData: `{"id": 1, "name": "Lunges"}`, ExpectedCode: 400},
-	{GivenId: "a", GivenExerciseData: `{"id": 1, "name": "Lunges"}`, ExpectedCode: 400},
-	{GivenId: "3", GivenExerciseData: `{"id": 3, "name": "Lunges"}`, ExpectedCode: 404},
+	{GivenId: "1", GivenExerciseData: `{"id": 1, "name": "Lunges", "description": "Lorem ipsum"}`, ExpectedCode: 204},
+	{GivenId: "2", GivenExerciseData: `{"id": 1, "name": "Lunges", "description": "Lorem ipsum"}`, ExpectedCode: 400},
+	{GivenId: "a", GivenExerciseData: `{"id": 1, "name": "Lunges", "description": "Lorem ipsum"}`, ExpectedCode: 400},
+	{GivenId: "3", GivenExerciseData: `{"id": 3, "name": "Lunges", "description": "Lorem ipsum"}`, ExpectedCode: 404},
 }
 
 func TestPutExercise(t *testing.T) {
@@ -124,8 +124,8 @@ type postExerciseTest struct {
 }
 
 var postExerciseTests = []postExerciseTest{
-	{GivenExerciseData: `{"Name": "Tricep extensions"}`, ExpectedCode: 201},
-	{GivenExerciseData: `{"Description": "A  tricep exercise"}`, ExpectedCode: 400},
+	{GivenExerciseData: `{"name": "Tricep extensions", "description": "Lorem ipsum"}`, ExpectedCode: 201},
+	{GivenExerciseData: `{"Muscle group": "tricep"}`, ExpectedCode: 400},
 }
 
 func TestPostExercise(t *testing.T) {

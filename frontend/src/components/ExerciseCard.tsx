@@ -29,9 +29,7 @@ const ExerciseCard: FC<ExerciseProps> = ({ exercise }) => {
               </div>
             </figcaption>
             <p className="text-base font-medium text-white">
-              “Tailwind CSS is the only framework that I've seen scale on large
-              teams. It’s easy to customize, adapts to any design, and the build
-              size is tiny.”
+              “{exercise.description}”
             </p>
           </blockquote>
         </div>
