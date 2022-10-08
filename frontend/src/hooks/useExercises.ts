@@ -22,7 +22,10 @@ const useExercises = (): IAPIResult<IExercise[]> => {
         setExercises(apiResult);
       })
   }, []);
-
+  
+  if (error !== undefined) {
+    console.error(error)
+  }
   return { result: exercises, error: error };
 }
 

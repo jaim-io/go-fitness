@@ -23,6 +23,9 @@ const useExercise = (id: string): IAPIResult<IExercise> => {
       });
   }, [id]);
 
+  if (error !== undefined) {
+    console.error(error)
+  }
   return { result: exercise, error: error };
 };
 

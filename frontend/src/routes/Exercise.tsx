@@ -6,10 +6,10 @@ import ErrorPage from "../pages/ErrorPage";
 const Exercise = () => {
   let { id } = useParams();
   const { result, error } = useExercise(id ?? "");
-  console.log(error);
-  
-  if (error !== undefined) return <ErrorPage message={error.message}/>;
-  return <>{result && <ExerciseCard exercise={result} />}</>;
+  if (error !== undefined) return <ErrorPage message={error.message} />;
+  return (
+    <div id="exercise">{result && <ExerciseCard exercise={result} />}</div>
+  );
 };
 
 export default Exercise;
