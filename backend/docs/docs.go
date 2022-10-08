@@ -50,19 +50,59 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/httputil.HTTPError"
-                            }
+                            "$ref": "#/definitions/httputil.HTTPError"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/httputil.HTTPError"
-                            }
+                            "$ref": "#/definitions/httputil.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/exercise/": {
+            "post": {
+                "description": "add by json exercise",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "exercises"
+                ],
+                "summary": "Add exercise",
+                "parameters": [
+                    {
+                        "description": "Add exercise",
+                        "name": "exercise",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Exercise"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/models.Exercise"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.HTTPError"
                         }
                     },
                     "500": {
@@ -76,7 +116,7 @@ const docTemplate = `{
         },
         "/exercise/{id}": {
             "get": {
-                "description": "get exervise by ID",
+                "description": "get exercise by ID",
                 "consumes": [
                     "application/json"
                 ],
@@ -90,6 +130,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "integer",
+                        "format": "uint32",
                         "description": "Exercise ID",
                         "name": "id",
                         "in": "path",
@@ -102,6 +143,101 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/models.Exercise"
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.HTTPError"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.HTTPError"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "update by json exercise",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "exercises"
+                ],
+                "summary": "Update exercise",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "format": "uint32",
+                        "description": "Exercise ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Update exercise",
+                        "name": "exercise",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Exercise"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.HTTPError"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "delete by exercise id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "exercises"
+                ],
+                "summary": "Delete an exercise",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "format": "uint32",
+                        "description": "Exercise ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
                     },
                     "400": {
                         "description": "Bad Request",

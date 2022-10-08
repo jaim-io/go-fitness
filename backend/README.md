@@ -14,3 +14,5 @@ go get -u github.com/swaggo/swag/cmd/swag
 go install github.com/swaggo/swag/cmd/swag@latest
 ```
 Then run `swag init -d cmd --pd pkg/controller` in `~/jaim-io/backend`.
+
+To see the docs navigate to the host URI + `/api/v1/docs/index.html`.

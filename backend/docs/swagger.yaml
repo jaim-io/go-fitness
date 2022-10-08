@@ -46,15 +46,11 @@ paths:
         "400":
           description: Bad Request
           schema:
-            items:
-              $ref: '#/definitions/httputil.HTTPError'
-            type: array
+            $ref: '#/definitions/httputil.HTTPError'
         "404":
           description: Not Found
           schema:
-            items:
-              $ref: '#/definitions/httputil.HTTPError'
-            type: array
+            $ref: '#/definitions/httputil.HTTPError'
         "500":
           description: Internal Server Error
           schema:
@@ -62,13 +58,75 @@ paths:
       summary: Get exercises
       tags:
       - exercises
+  /exercise/:
+    post:
+      consumes:
+      - application/json
+      description: add by json exercise
+      parameters:
+      - description: Add exercise
+        in: body
+        name: exercise
+        required: true
+        schema:
+          $ref: '#/definitions/models.Exercise'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Exercise'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+      summary: Add exercise
+      tags:
+      - exercises
   /exercise/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: delete by exercise id
+      parameters:
+      - description: Exercise ID
+        format: uint32
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+      summary: Delete an exercise
+      tags:
+      - exercises
     get:
       consumes:
       - application/json
-      description: get exervise by ID
+      description: get exercise by ID
       parameters:
       - description: Exercise ID
+        format: uint32
         in: path
         name: id
         required: true
@@ -93,6 +151,39 @@ paths:
           schema:
             $ref: '#/definitions/httputil.HTTPError'
       summary: Get exercise
+      tags:
+      - exercises
+    put:
+      consumes:
+      - application/json
+      description: update by json exercise
+      parameters:
+      - description: Exercise ID
+        format: uint32
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update exercise
+        in: body
+        name: exercise
+        required: true
+        schema:
+          $ref: '#/definitions/models.Exercise'
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+      summary: Update exercise
       tags:
       - exercises
 swagger: "2.0"

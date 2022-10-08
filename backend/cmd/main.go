@@ -45,11 +45,14 @@ func main() {
 	router.Use(cors.New(config))
 
 	router.GET("/health", controllers.GetHealth)
-	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	api := router.Group("/api/v1")
 	{
+		api.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 		api.GET("/exercise", env.GetAllExercises)
 		api.GET("/exercise/:id", env.GetExerciseById)
+		api.PUT("/exercise/:id", env.PutExercise)
+		api.POST("/exercise/", env.PostExercise)
+		api.DELETE("/exercise/:id", env.DeleteExercise)
 	}
 
 	router.Run("0.0.0.0:8080")
