@@ -4,10 +4,10 @@ import (
 	"database/sql"
 	"fmt"
 	"net/http"
-	"strconv"
 
 	_ "github.com/Jaim010/jaim-io/backend/pkg/httputil"
 	"github.com/Jaim010/jaim-io/backend/pkg/models"
+	"github.com/Jaim010/jaim-io/backend/pkg/utils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -47,7 +47,7 @@ func (env *Env) GetAllExercises(c *gin.Context) {
 func (env *Env) GetExerciseById(c *gin.Context) {
 	idStr := c.Param("id")
 
-	id, err := strToUint32(idStr)
+	id, err := utils.StrToUint32(idStr)
 	if err != nil {
 		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -84,7 +84,7 @@ func (env *Env) PutExercise(c *gin.Context) {
 
 	idStr := c.Param("id")
 
-	id, err := strToUint32(idStr)
+	id, err := utils.StrToUint32(idStr)
 	if err != nil {
 		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -102,6 +102,10 @@ func (env *Env) PutExercise(c *gin.Context) {
 	}
 
 	if err := env.ExerciseContext.Update(id, updatedExercise); err != nil {
+		if _, err := env.ExerciseContext.GetById(id); err != nil {
+			c.IndentedJSON(http.StatusNotFound, gin.H{"error": err.Error()})
+			return
+		}
 		c.IndentedJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
@@ -124,6 +128,12 @@ func (env *Env) PostExercise(c *gin.Context) {
 
 	if err := c.BindJSON(&newExercise); err != nil {
 		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	empty := newExercise == models.Exercise{}
+	if empty {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "exercise fields can't be completely empty"})
 		return
 	}
 
@@ -150,7 +160,7 @@ func (env *Env) PostExercise(c *gin.Context) {
 func (env *Env) DeleteExercise(c *gin.Context) {
 	idStr := c.Param("id")
 
-	id, err := strToUint32(idStr)
+	id, err := utils.StrToUint32(idStr)
 	if err != nil {
 		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -174,14 +184,4 @@ func (env *Env) DeleteExercise(c *gin.Context) {
 	}
 
 	c.Status(http.StatusNoContent)
-}
-
-func strToUint32(idStr string) (uint32, error) {
-	idU64, err := strconv.ParseUint(idStr, 10, 32)
-	if err != nil {
-		return 0, err
-	}
-
-	id := uint32(idU64)
-	return id, nil
 }

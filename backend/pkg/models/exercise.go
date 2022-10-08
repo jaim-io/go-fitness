@@ -53,7 +53,8 @@ func (c ExerciseContext) Update(id uint32, exercise Exercise) error {
 	_, err := c.DB.Exec(`
 		UPDATE exercises
 		SET name = ? 
-		`, exercise.Name,
+		WHERE id = ?
+		`, exercise.Name, exercise.Id,
 	)
 
 	if err != nil {
