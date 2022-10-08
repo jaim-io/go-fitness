@@ -19,7 +19,7 @@
 # vendor/
 
 /bin/
-/backend/mysql-data
+/backend/postgres-data
 
 ## Frontend-React
 # dependencies

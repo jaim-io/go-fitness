@@ -1,22 +1,21 @@
 version: '1.0.0'
 services:
-  mysql:
-    image: mysql:8.0
-    container_name: jaimio-mysql
+  postgres:
+    image: postgres:14
+    container_name: jaimio-postgres
     env_file:
       - ./backend/.env
     volumes:
-      - ./backend/mysql-data:/var/lib/mysql:rw
+      - ./backend/postgres-data:/var/lib/postgresql/data:rw
       - ./backend/pkg/db/create-tables.sql:/docker-entrypoint-initdb.d/create-tables.sql
     ports:
-      - 3306:3306
+      - 5432:5432
     expose:
-      - 3306
-    command: --default-authentication-plugin=mysql_native_password
+      - 5432
 
   api:
     depends_on:
-      - mysql
+      - postgres
     image: jaimio-api:latest
     build:
       context: ./backend/
@@ -29,7 +28,7 @@ services:
     expose:
       - 8080
     links:
-      - mysql:mysql
+      - postgres:postgres
 
   web:
     depends_on:
