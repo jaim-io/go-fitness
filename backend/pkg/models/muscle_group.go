@@ -77,14 +77,17 @@ func (c MuscleGroupContext) Update(id uint32, muscleGroup MuscleGroup) error {
 }
 
 func (c MuscleGroupContext) Add(muscleGroup MuscleGroup) (MuscleGroup, error) {
-	_, err := c.DB.Exec(context.Background(), `
+	var id int
+	row := c.DB.QueryRow(context.Background(), `
 		INSERT INTO muscle_groups (name, description, image_path)
-		VALUES ($1, $2, $3)`, muscleGroup.Name, muscleGroup.Description, muscleGroup.ImagePath,
+		VALUES ($1, $2, $3)
+		RETURNING id`, muscleGroup.Name, muscleGroup.Description, muscleGroup.ImagePath,
 	)
 
-	if err != nil {
+	if err := row.Scan(&id); err != nil {
 		return MuscleGroup{}, err
 	}
+	muscleGroup.Id = uint32(id)
 	return muscleGroup, nil
 }
 

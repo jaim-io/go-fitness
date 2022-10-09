@@ -99,14 +99,17 @@ func (c ExerciseContext) Update(id uint32, exercise Exercise) error {
 }
 
 func (c ExerciseContext) Add(exercise Exercise) (Exercise, error) {
-	_, err := c.DB.Exec(context.Background(), `
+	var id int
+	row := c.DB.QueryRow(context.Background(), `
 		INSERT INTO exercises (name, description, image_path, video_link)
-		VALUES ($1, $2, $3, $4)`, exercise.Name, exercise.Description, exercise.ImagePath, exercise.VideoLink,
+		VALUES ($1, $2, $3, $4)
+		RETURNING id`, exercise.Name, exercise.Description, exercise.ImagePath, exercise.VideoLink,
 	)
 
-	if err != nil {
+	if err := row.Scan(&id); err != nil {
 		return Exercise{}, err
 	}
+	exercise.Id = uint32(id)
 	return exercise, nil
 }
 
