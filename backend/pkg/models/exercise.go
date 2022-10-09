@@ -87,7 +87,7 @@ func (c ExerciseContext) GetById(id uint32) (Exercise, error) {
 func (c ExerciseContext) Update(id uint32, exercise Exercise) error {
 	_, err := c.DB.Exec(context.Background(), `
 		UPDATE exercises
-		SET name=$1, SET description=$2, SET image_path=$3, SET video_link=$4
+		SET name=$1, description=$2, image_path=$3, video_link=$4
 		WHERE id=$5
 		`, exercise.Name, exercise.Description, exercise.ImagePath, exercise.VideoLink, exercise.Id,
 	)
@@ -134,6 +134,23 @@ func (c ExerciseContext) Exists(name string) (bool, error) {
 			WHERE LOWER(name)=LOWER($1)
 		)
 	`, name)
+
+	if err := row.Scan(&exists); err != nil {
+		return false, err
+	}
+
+	return exists, nil
+}
+
+func (c ExerciseContext) ExistsExcludingId(name string, id uint32) (bool, error) {
+	var exists bool
+	row := c.DB.QueryRow(context.Background(), `
+		SELECT EXISTS(
+			SELECT id
+			FROM exercises
+			WHERE LOWER(name)=LOWER($1) AND id!=$2
+		)
+	`, name, id)
 
 	if err := row.Scan(&exists); err != nil {
 		return false, err

@@ -65,7 +65,7 @@ func (c MuscleGroupContext) GetById(id uint32) (MuscleGroup, error) {
 func (c MuscleGroupContext) Update(id uint32, muscleGroup MuscleGroup) error {
 	_, err := c.DB.Exec(context.Background(), `
 		UPDATE muscle_groups
-		SET name=$1, SET description=$2, SET image_path=$3,
+		SET name=$1, description=$2, image_path=$3,
 		WHERE id=$4
 		`, muscleGroup.Name, muscleGroup.Description, muscleGroup.ImagePath, muscleGroup.Id,
 	)
@@ -112,6 +112,23 @@ func (c MuscleGroupContext) Exists(name string) (bool, error) {
 			WHERE LOWER(name)=LOWER($1)
 		)
 	`, name)
+
+	if err := row.Scan(&exists); err != nil {
+		return false, err
+	}
+
+	return exists, nil
+}
+
+func (c MuscleGroupContext) ExistsExcludingId(name string, id uint32) (bool, error) {
+	var exists bool
+	row := c.DB.QueryRow(context.Background(), `
+		SELECT EXISTS(
+			SELECT id
+			FROM muscle_groups
+			WHERE LOWER(name)=LOWER($1) AND id!=$2
+		)
+	`, name, id)
 
 	if err := row.Scan(&exists); err != nil {
 		return false, err

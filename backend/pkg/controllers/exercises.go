@@ -101,8 +101,12 @@ func (env *Env) PutExercise(c *gin.Context) {
 		return
 	}
 
-	// ex_exists, err := env.ExerciseContext.Exists(updatedExercise.Name)
-	// mgs_exists, err := env.MuscleGroupContext.Exists(newExercise.MuscleGroups)
+	ex_exists, err := env.ExerciseContext.ExistsExcludingId(updatedExercise.Name, updatedExercise.Id)
+	if ex_exists {
+		err := fmt.Sprintf("another exercise with name '%s' already exists", updatedExercise.Name)
+		c.IndentedJSON(http.StatusConflict, gin.H{"error": err})
+		return
+	}
 
 	if err := env.ExerciseContext.Update(id, updatedExercise); err != nil {
 		if _, err := env.ExerciseContext.GetById(id); err != nil {
@@ -139,10 +143,9 @@ func (env *Env) PostExercise(c *gin.Context) {
 		return
 	}
 
-	/////////////////// NOT TESTED YET ///////////////////
 	ex_exists, err := env.ExerciseContext.Exists(newExercise.Name)
 	if ex_exists {
-		err := fmt.Sprintf("exercise with name '%s' already exists", newExercise.Name)
+		err := fmt.Sprintf("an exercise with name '%s' already exists", newExercise.Name)
 		c.IndentedJSON(http.StatusConflict, gin.H{"error": err})
 		return
 	}

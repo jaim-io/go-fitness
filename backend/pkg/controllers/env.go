@@ -12,6 +12,7 @@ type Env struct {
 		Add(exercise models.Exercise) (models.Exercise, error)
 		Remove(exercise models.Exercise) error
 		Exists(name string) (bool, error)
+		ExistsExcludingId(name string, id uint32) (bool, error)
 	}
 	MuscleGroupContext interface {
 		GetAll() ([]models.MuscleGroup, error)
@@ -20,5 +21,6 @@ type Env struct {
 		Add(muscleGroup models.MuscleGroup) (models.MuscleGroup, error)
 		Remove(muscleGroup models.MuscleGroup) error
 		Exists(name string) (bool, error)
+		ExistsExcludingId(name string, id uint32) (bool, error)
 	}
 }

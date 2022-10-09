@@ -99,6 +99,13 @@ func (env *Env) PutMuscleGroup(c *gin.Context) {
 		return
 	}
 
+	mg_exists, err := env.MuscleGroupContext.ExistsExcludingId(updatedMuscleGroup.Name, updatedMuscleGroup.Id)
+	if mg_exists {
+		err := fmt.Sprintf("another muscle group with name '%s' already exists", updatedMuscleGroup.Name)
+		c.IndentedJSON(http.StatusConflict, gin.H{"error": err})
+		return
+	}
+
 	if err := env.MuscleGroupContext.Update(id, updatedMuscleGroup); err != nil {
 		if _, err := env.MuscleGroupContext.GetById(id); err != nil {
 			c.IndentedJSON(http.StatusNotFound, gin.H{"error": err.Error()})
@@ -131,6 +138,13 @@ func (env *Env) PostMuscleGroup(c *gin.Context) {
 
 	if empty := newMuscleGroup.Description == "" || newMuscleGroup.ImagePath == ""; empty {
 		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "muscle group fields can't be completely empty"})
+		return
+	}
+
+	mg_exists, err := env.MuscleGroupContext.Exists(newMuscleGroup.Name)
+	if mg_exists {
+		err := fmt.Sprintf("a muscle group with name '%s' already exists", newMuscleGroup.Name)
+		c.IndentedJSON(http.StatusConflict, gin.H{"error": err})
 		return
 	}
 
