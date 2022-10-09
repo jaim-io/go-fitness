@@ -1,0 +1,189 @@
+basePath: /api/v1
+definitions:
+  httputil.HTTPError:
+    properties:
+      code:
+        example: 400
+        type: integer
+      message:
+        example: status bad request
+        type: string
+    type: object
+  models.Exercise:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: jameyschaap06@gmail.com
+    name: Jamey Schaap
+    url: https://www.linkedin.com/in/jamey-schaap/
+  description: My portfolio website
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  title: Jaim-io
+  version: "1.0"
+paths:
+  /exercise:
+    get:
+      consumes:
+      - application/json
+      description: get exercises
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Exercise'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+      summary: Get exercises
+      tags:
+      - exercises
+  /exercise/:
+    post:
+      consumes:
+      - application/json
+      description: add by json exercise
+      parameters:
+      - description: Add exercise
+        in: body
+        name: exercise
+        required: true
+        schema:
+          $ref: '#/definitions/models.Exercise'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Exercise'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+      summary: Add exercise
+      tags:
+      - exercises
+  /exercise/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: delete by exercise id
+      parameters:
+      - description: Exercise ID
+        format: uint32
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+      summary: Delete an exercise
+      tags:
+      - exercises
+    get:
+      consumes:
+      - application/json
+      description: get exercise by ID
+      parameters:
+      - description: Exercise ID
+        format: uint32
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Exercise'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+      summary: Get exercise
+      tags:
+      - exercises
+    put:
+      consumes:
+      - application/json
+      description: update by json exercise
+      parameters:
+      - description: Exercise ID
+        format: uint32
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update exercise
+        in: body
+        name: exercise
+        required: true
+        schema:
+          $ref: '#/definitions/models.Exercise'
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+      summary: Update exercise
+      tags:
+      - exercises
+swagger: "2.0"

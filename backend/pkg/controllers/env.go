@@ -12,4 +12,11 @@ type Env struct {
 		Add(exercise models.Exercise) (models.Exercise, error)
 		Remove(exercise models.Exercise) error
 	}
+	MuscleGroupContext interface {
+		GetAll() ([]models.MuscleGroup, error)
+		GetById(id uint32) (models.MuscleGroup, error)
+		Update(id uint32, muscle_group models.MuscleGroup) error
+		Add(muscle_group models.MuscleGroup) (models.MuscleGroup, error)
+		Remove(muscle_group models.MuscleGroup) error
+	}
 }

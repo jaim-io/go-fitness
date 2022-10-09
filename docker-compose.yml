@@ -1,0 +1,46 @@
+version: '1.0.0'
+services:
+  postgres:
+    image: postgres:14
+    container_name: jaimio-postgres
+    env_file:
+      - ./backend/.env
+    volumes:
+      - ./backend/postgres-data:/var/lib/postgresql/data:rw
+      - ./backend/pkg/db/create-tables.sql:/docker-entrypoint-initdb.d/create-tables.sql
+    ports:
+      - 5432:5432
+    expose:
+      - 5432
+
+  api:
+    depends_on:
+      - postgres
+    image: jaimio-api:latest
+    build:
+      context: ./backend/
+      dockerfile: Dockerfile
+    container_name: jaimio-api
+    env_file:
+      - ./backend/.env
+    ports: 
+      - 8080:8080
+    expose:
+      - 8080
+    links:
+      - postgres:postgres
+
+  web:
+    depends_on:
+      - api
+    image: jaimio-web:latest
+    build:
+      context: ./frontend/
+      dockerfile: Dockerfile
+    container_name: jaimio-web
+    env_file:
+      - ./frontend/.env
+    ports: 
+      - 3000:3000
+    expose:
+      - 3000
