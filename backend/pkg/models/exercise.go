@@ -24,16 +24,16 @@ func (c ExerciseContext) GetAll() ([]Exercise, error) {
 	rows, err := c.DB.Query(context.Background(), `
 		SELECT 
 			e.id, 
-			name, 
-			description, 
+			e.name, 
+			e.description, 
 			ARRAY(
 				SELECT mg.name
 				FROM muscle_groups as mg 
 				JOIN exercise_muscle_groups as emg
 					ON mg.id=emg.muscle_group_id
 				WHERE emg.exercise_id=e.id) as "muscle_groups",
-			image_path, 
-			video_link 
+			e.image_path, 
+			e.video_link 
 		FROM exercises as e
 	`)
 	if err != nil {

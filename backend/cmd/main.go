@@ -48,11 +48,18 @@ func main() {
 	api := router.Group("/api/v1")
 	{
 		api.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
 		api.GET("/exercise", env.GetAllExercises)
 		api.GET("/exercise/:id", env.GetExerciseById)
 		api.PUT("/exercise/:id", env.PutExercise)
-		api.POST("/exercise/", env.PostExercise)
+		api.POST("/exercise", env.PostExercise)
 		api.DELETE("/exercise/:id", env.DeleteExercise)
+
+		api.GET("/musclegroup", env.GetAllMuscleGroups)
+		api.GET("/musclegroup/:id", env.GetMuscleGroupById)
+		api.PUT("/musclegroup/:id", env.PutMuscleGroup)
+		api.POST("/musclegroup", env.PostMuscleGroup)
+		api.DELETE("/musclegroup/:id", env.DeleteMuscleGroup)
 	}
 
 	router.Run("0.0.0.0:8080")
