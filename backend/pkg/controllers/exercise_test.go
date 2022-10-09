@@ -5,31 +5,19 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
-	"reflect"
 	"testing"
 
 	"github.com/Jaim010/jaim-io/backend/pkg/mocks"
 	"github.com/Jaim010/jaim-io/backend/pkg/models"
+	"github.com/Jaim010/jaim-io/backend/pkg/utils/testutils"
 	"github.com/gin-gonic/gin"
 )
-
-func checkResponseCode(t *testing.T, expected, actual int) {
-	if expected != actual {
-		t.Errorf("Expected respone code %d. Got %d\n", expected, actual)
-	}
-}
-
-func checkEqual[K any](t *testing.T, expected, actual K) {
-	if !reflect.DeepEqual(expected, actual) {
-		t.Errorf("Expected %v. Got %v\n", expected, actual)
-	}
-}
 
 func TestGetAllExercises(t *testing.T) {
 	// Arrange
 	expectedExs := []models.Exercise{
-		{Name: "Barbell bench press", Id: 1, Description: "Lorem ipsum"},
-		{Name: "Bulgarian split squat", Id: 2, Description: "Lorem ipsum"},
+		{Id: 1, Name: "Barbell bench press", MuscleGroups: []string{"Chest", "Tricep"}, Description: "Lorem ipsum", ImagePath: "/images/bb_bench_press", VideoLink: "https://www.youtube.com/"},
+		{Id: 2, Name: "Bulgarian split squat", MuscleGroups: []string{"Quad", "Glute"}, Description: "Lorem ipsum", ImagePath: "/images/b_split_squad", VideoLink: "https://www.youtube.com/"},
 	}
 
 	env := Env{ExerciseContext: &mocks.MockExerciseContext{}}
@@ -43,11 +31,11 @@ func TestGetAllExercises(t *testing.T) {
 	router.ServeHTTP(w, req)
 
 	// Assert
-	checkResponseCode(t, http.StatusOK, w.Code)
+	testutils.CheckResponseCode(t, http.StatusOK, w.Code)
 
 	var responeExs []models.Exercise
 	json.Unmarshal(w.Body.Bytes(), &responeExs)
-	checkEqual(t, expectedExs, responeExs)
+	testutils.CheckEqual(t, expectedExs, responeExs)
 }
 
 type getIdExerciseTest struct {
@@ -57,10 +45,22 @@ type getIdExerciseTest struct {
 }
 
 var getIdExerciseTests = []getIdExerciseTest{
-	{GivenId: "1", ExpectedExercise: models.Exercise{Id: 1, Name: "Barbell bench press", Description: "Lorem ipsum"}, ExpectedCode: 200},
-	{GivenId: "-1", ExpectedExercise: models.Exercise{}, ExpectedCode: 400},
-	{GivenId: "a", ExpectedExercise: models.Exercise{}, ExpectedCode: 400},
-	{GivenId: "1000", ExpectedExercise: models.Exercise{}, ExpectedCode: 404},
+	{
+		GivenId:          "1",
+		ExpectedExercise: models.Exercise{Id: 1, Name: "Barbell bench press", MuscleGroups: []string{"Chest", "Tricep"}, Description: "Lorem ipsum", ImagePath: "/images/bb_bench_press", VideoLink: "https://www.youtube.com/"},
+		ExpectedCode:     200},
+	{
+		GivenId:          "-1",
+		ExpectedExercise: models.Exercise{},
+		ExpectedCode:     400},
+	{
+		GivenId:          "a",
+		ExpectedExercise: models.Exercise{},
+		ExpectedCode:     400},
+	{
+		GivenId:          "1000",
+		ExpectedExercise: models.Exercise{},
+		ExpectedCode:     404},
 }
 
 func TestGetExercise(t *testing.T) {
@@ -77,11 +77,11 @@ func TestGetExercise(t *testing.T) {
 		router.ServeHTTP(w, req)
 
 		// Assert
-		checkResponseCode(t, test.ExpectedCode, w.Code)
+		testutils.CheckResponseCode(t, test.ExpectedCode, w.Code)
 		if test.ExpectedCode == 200 {
 			var responseExercise models.Exercise
 			json.Unmarshal(w.Body.Bytes(), &responseExercise)
-			checkEqual(t, test.ExpectedExercise, responseExercise)
+			testutils.CheckEqual(t, test.ExpectedExercise, responseExercise)
 		}
 	}
 }
@@ -93,10 +93,22 @@ type putExerciseTest struct {
 }
 
 var putExerciseTests = []putExerciseTest{
-	{GivenId: "1", GivenExerciseData: `{"id": 1, "name": "Lunges", "description": "Lorem ipsum"}`, ExpectedCode: 204},
-	{GivenId: "2", GivenExerciseData: `{"id": 1, "name": "Lunges", "description": "Lorem ipsum"}`, ExpectedCode: 400},
-	{GivenId: "a", GivenExerciseData: `{"id": 1, "name": "Lunges", "description": "Lorem ipsum"}`, ExpectedCode: 400},
-	{GivenId: "3", GivenExerciseData: `{"id": 3, "name": "Lunges", "description": "Lorem ipsum"}`, ExpectedCode: 404},
+	{
+		GivenId:           "1",
+		GivenExerciseData: `{"id": 1, "name": "Military press", "muscle_groups": ["Shoulder"], "description": "Lorem ipsum", "image_path": "/images/military_press", "video_link": "https://www.youtube.com/"}`,
+		ExpectedCode:      204},
+	{
+		GivenId:           "2",
+		GivenExerciseData: `{"id": 1, "name": "Military press", "muscle_groups": ["Shoulder"], "description": "Lorem ipsum", "image_path": "/images/military_press", "video_link": "https://www.youtube.com/"}`,
+		ExpectedCode:      400},
+	{
+		GivenId:           "a",
+		GivenExerciseData: `{"id": 1, "name": "Military press", "muscle_groups": ["Shoulder"], "description": "Lorem ipsum", "image_path": "/images/military_press", "video_link": "https://www.youtube.com/"}`,
+		ExpectedCode:      400},
+	{
+		GivenId:           "3",
+		GivenExerciseData: `{"id": 3, "name": "Military press", "muscle_groups": ["Shoulder"], "description": "Lorem ipsum", "image_path": "/images/military_press", "video_link": "https://www.youtube.com/"}`,
+		ExpectedCode:      404},
 }
 
 func TestPutExercise(t *testing.T) {
@@ -114,7 +126,7 @@ func TestPutExercise(t *testing.T) {
 		router.ServeHTTP(w, req)
 
 		// Assert
-		checkResponseCode(t, test.ExpectedCode, w.Code)
+		testutils.CheckResponseCode(t, test.ExpectedCode, w.Code)
 	}
 }
 
@@ -124,8 +136,12 @@ type postExerciseTest struct {
 }
 
 var postExerciseTests = []postExerciseTest{
-	{GivenExerciseData: `{"name": "Tricep extensions", "description": "Lorem ipsum"}`, ExpectedCode: 201},
-	{GivenExerciseData: `{"Muscle group": "tricep"}`, ExpectedCode: 400},
+	{
+		GivenExerciseData: `{"name": "Military press", "muscle_groups": ["Shoulder"], "description": "Lorem ipsum", "image_path": "/images/military_press", "video_link": "https://www.youtube.com/"}`,
+		ExpectedCode:      201},
+	{
+		GivenExerciseData: `{"worked-muscles": "tricep"}`,
+		ExpectedCode:      400},
 }
 
 func TestPostExercise(t *testing.T) {
@@ -143,7 +159,7 @@ func TestPostExercise(t *testing.T) {
 		router.ServeHTTP(w, req)
 
 		// Assert
-		checkResponseCode(t, test.ExpectedCode, w.Code)
+		testutils.CheckResponseCode(t, test.ExpectedCode, w.Code)
 	}
 }
 
@@ -153,12 +169,18 @@ type deleteExerciseTest struct {
 }
 
 var deleteExerciseTests = []deleteExerciseTest{
-	{GivenId: "1", ExpectedCode: 204},
-	{GivenId: "a", ExpectedCode: 400},
-	{GivenId: "1000", ExpectedCode: 404},
+	{
+		GivenId:      "1",
+		ExpectedCode: 204},
+	{
+		GivenId:      "a",
+		ExpectedCode: 400},
+	{
+		GivenId:      "1000",
+		ExpectedCode: 404},
 }
 
-func TestDeleteBook(t *testing.T) {
+func TestDeleteExercise(t *testing.T) {
 	// Arrange
 	env := Env{ExerciseContext: &mocks.MockExerciseContext{}}
 	router := gin.Default()
@@ -172,6 +194,6 @@ func TestDeleteBook(t *testing.T) {
 		router.ServeHTTP(w, req)
 
 		// Assert
-		checkResponseCode(t, test.ExpectedCode, w.Code)
+		testutils.CheckResponseCode(t, test.ExpectedCode, w.Code)
 	}
 }

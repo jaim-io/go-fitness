@@ -18,8 +18,8 @@ const useExercise = (id: string): IAPIResult<IExercise> => {
         }
         return res.json();
       })
-      .then((result) => {
-        setExercise(result);
+      .then((res) => {
+        setExercise(res);
       });
   }, [id]);
 

@@ -7,7 +7,7 @@ import (
 
 	_ "github.com/Jaim010/jaim-io/backend/pkg/httputil"
 	"github.com/Jaim010/jaim-io/backend/pkg/models"
-	"github.com/Jaim010/jaim-io/backend/pkg/utils"
+	"github.com/Jaim010/jaim-io/backend/pkg/utils/utils"
 
 	"github.com/gin-gonic/gin"
 )
