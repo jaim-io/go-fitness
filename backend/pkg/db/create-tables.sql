@@ -1,7 +1,7 @@
 CREATE TABLE exercises (
   id            SERIAL  NOT NULL PRIMARY KEY,
   name          VARCHAR(60)         NOT NULL,
-  description   VARCHAR(255)        NOT NULL, 
+  description   VARCHAR(512)        NOT NULL, 
   image_path    VARCHAR(1024)       NOT NULL,
   video_link    VARCHAR(1024)       NOT NULL
 );
@@ -9,7 +9,7 @@ CREATE TABLE exercises (
 CREATE TABLE muscle_groups(
   id          SERIAL  NOT NULL PRIMARY KEY,
   name        VARCHAR(60)         NOT NULL,
-  description   VARCHAR(255)      NOT NULL, 
+  description   VARCHAR(512)      NOT NULL, 
   image_path  VARCHAR(1024)       NOT NULL
 );
 
@@ -53,7 +53,7 @@ VALUES
     '/assets/images/muscle_groups/shoulder'
   ),(
     'Bicep', 
-    'The biceps is a large muscle situated on the front of the upper arm between the shoulder and the elbow. Also known by the Latin name biceps brachii (meaning \"two-headed muscle of the arm\"), the muscle\'s primary function is to flex the elbow and rotate the forearm.',
+    'The biceps is a large muscle situated on the front of the upper arm between the shoulder and the elbow. Also known by the Latin name biceps brachii (meaning "two-headed muscle of the arm"), the muscle"s primary function is to flex the elbow and rotate the forearm.',
     '/assets/images/muscle_groups/bicep'
   );
 
