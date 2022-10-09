@@ -11,16 +11,16 @@ type MockExerciseContext struct{}
 
 func (c *MockExerciseContext) GetAll() ([]models.Exercise, error) {
 	var exs = []models.Exercise{
-		{Name: "Barbell bench press", Id: 1, Description: "Lorem ipsum"},
-		{Name: "Bulgarian split squat", Id: 2, Description: "Lorem ipsum"},
+		{Id: 1, Name: "Barbell bench press", MuscleGroups: []string{"Chest", "Tricep"}, Description: "Lorem ipsum", ImagePath: "/images/bb_bench_press", VideoLink: "https://www.youtube.com/"},
+		{Id: 2, Name: "Bulgarian split squat", MuscleGroups: []string{"Quad", "Glute"}, Description: "Lorem ipsum", ImagePath: "/images/b_split_squad", VideoLink: "https://www.youtube.com/"},
 	}
 	return exs, nil
 }
 
 func (c *MockExerciseContext) GetById(id uint32) (models.Exercise, error) {
 	var exs = []models.Exercise{
-		{Name: "Barbell bench press", Id: 1, Description: "Lorem ipsum"},
-		{Name: "Bulgarian split squat", Id: 2, Description: "Lorem ipsum"},
+		{Id: 1, Name: "Barbell bench press", MuscleGroups: []string{"Chest", "Tricep"}, Description: "Lorem ipsum", ImagePath: "/images/bb_bench_press", VideoLink: "https://www.youtube.com/"},
+		{Id: 2, Name: "Bulgarian split squat", MuscleGroups: []string{"Quad", "Glute"}, Description: "Lorem ipsum", ImagePath: "/images/b_split_squad", VideoLink: "https://www.youtube.com/"},
 	}
 
 	for _, ex := range exs {
@@ -34,8 +34,8 @@ func (c *MockExerciseContext) GetById(id uint32) (models.Exercise, error) {
 
 func (c *MockExerciseContext) Update(id uint32, exercise models.Exercise) error {
 	var exs = []models.Exercise{
-		{Name: "Barbell bench press", Id: 1, Description: "Lorem ipsum"},
-		{Name: "Bulgarian split squat", Id: 2, Description: "Lorem ipsum"},
+		{Id: 1, Name: "Barbell bench press", MuscleGroups: []string{"Chest", "Tricep"}, Description: "Lorem ipsum", ImagePath: "/images/bb_bench_press", VideoLink: "https://www.youtube.com/"},
+		{Id: 2, Name: "Bulgarian split squat", MuscleGroups: []string{"Quad", "Glute"}, Description: "Lorem ipsum", ImagePath: "/images/b_split_squad", VideoLink: "https://www.youtube.com/"},
 	}
 
 	for i, ex := range exs {
@@ -50,8 +50,8 @@ func (c *MockExerciseContext) Update(id uint32, exercise models.Exercise) error 
 
 func (c *MockExerciseContext) Add(exercise models.Exercise) (models.Exercise, error) {
 	var exs = []models.Exercise{
-		{Name: "Barbell bench press", Id: 1, Description: "Lorem ipsum"},
-		{Name: "Bulgarian split squat", Id: 2, Description: "Lorem ipsum"},
+		{Id: 1, Name: "Barbell bench press", MuscleGroups: []string{"Chest", "Tricep"}, Description: "Lorem ipsum", ImagePath: "/images/bb_bench_press", VideoLink: "https://www.youtube.com/"},
+		{Id: 2, Name: "Bulgarian split squat", MuscleGroups: []string{"Quad", "Glute"}, Description: "Lorem ipsum", ImagePath: "/images/b_split_squad", VideoLink: "https://www.youtube.com/"},
 	}
 
 	for _, ex := range exs {
@@ -66,8 +66,8 @@ func (c *MockExerciseContext) Add(exercise models.Exercise) (models.Exercise, er
 
 func (c *MockExerciseContext) Remove(exercise models.Exercise) error {
 	var exs = []models.Exercise{
-		{Name: "Barbell bench press", Id: 1, Description: "Lorem ipsum"},
-		{Name: "Bulgarian split squat", Id: 2, Description: "Lorem ipsum"},
+		{Id: 1, Name: "Barbell bench press", MuscleGroups: []string{"Chest", "Tricep"}, Description: "Lorem ipsum", ImagePath: "/images/bb_bench_press", VideoLink: "https://www.youtube.com/"},
+		{Id: 2, Name: "Bulgarian split squat", MuscleGroups: []string{"Quad", "Glute"}, Description: "Lorem ipsum", ImagePath: "/images/b_split_squad", VideoLink: "https://www.youtube.com/"},
 	}
 
 	for i, ex := range exs {

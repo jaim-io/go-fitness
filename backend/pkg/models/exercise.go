@@ -64,14 +64,15 @@ func (c ExerciseContext) GetById(id uint32) (Exercise, error) {
 
 	row := c.DB.QueryRow(context.Background(), `
 		SELECT 
-		id, 
+			id, 
 			name, 
 			description, 
 			ARRAY(
 				SELECT DISTINCT ON (mg.name) mg.name 
 				FROM muscle_groups as mg 
 				JOIN exercise_muscle_groups as emg
-				ON emg.exercise_id=$1) as "muscle_groups",
+					ON emg.muscle_group_id=mg.id
+				WHERE emg.exercise_id=$1) as "muscle_groups",
 			image_path, 
 			video_link 
 		FROM exercises 

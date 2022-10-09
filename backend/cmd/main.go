@@ -35,7 +35,8 @@ func main() {
 	}
 
 	env := &controllers.Env{
-		ExerciseContext: models.ExerciseContext{DB: db},
+		ExerciseContext:    models.ExerciseContext{DB: db},
+		MuscleGroupContext: models.MuscleGroupContext{DB: db},
 	}
 
 	router := gin.Default()
