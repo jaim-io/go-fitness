@@ -121,3 +121,20 @@ func (c ExerciseContext) Remove(exercise Exercise) error {
 	}
 	return nil
 }
+
+func (c ExerciseContext) Exists(name string) (bool, error) {
+	var exists bool
+	row := c.DB.QueryRow(context.Background(), `
+		SELECT EXISTS(
+			SELECT id
+			FROM exercises
+			WHERE LOWER(name)=LOWER($1)
+		)
+	`, name)
+
+	if err := row.Scan(&exists); err != nil {
+		return false, err
+	}
+
+	return exists, nil
+}

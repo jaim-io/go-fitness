@@ -99,3 +99,20 @@ func (c MuscleGroupContext) Remove(muscleGroup MuscleGroup) error {
 	}
 	return nil
 }
+
+func (c MuscleGroupContext) Exists(name string) (bool, error) {
+	var exists bool
+	row := c.DB.QueryRow(context.Background(), `
+		SELECT EXISTS(
+			SELECT id
+			FROM muscle_groups
+			WHERE LOWER(name)=LOWER($1)
+		)
+	`, name)
+
+	if err := row.Scan(&exists); err != nil {
+		return false, err
+	}
+
+	return exists, nil
+}

@@ -1,14 +1,14 @@
 CREATE TABLE exercises (
-  id            SERIAL  NOT NULL PRIMARY KEY,
-  name          VARCHAR(60)         NOT NULL,
+  id            SERIAL              NOT NULL    PRIMARY KEY,
+  name          VARCHAR(60)         NOT NULL    UNIQUE,
   description   VARCHAR(512)        NOT NULL, 
   image_path    VARCHAR(1024)       NOT NULL,
   video_link    VARCHAR(1024)       NOT NULL
 );
 
 CREATE TABLE muscle_groups(
-  id          SERIAL  NOT NULL PRIMARY KEY,
-  name        VARCHAR(60)         NOT NULL,
+  id          SERIAL              NOT NULL    PRIMARY KEY,
+  name        VARCHAR(60)         NOT NULL    UNIQUE,
   description   VARCHAR(512)      NOT NULL, 
   image_path  VARCHAR(1024)       NOT NULL
 );

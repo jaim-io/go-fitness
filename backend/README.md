@@ -1,11 +1,11 @@
 ## Backend environment variables
-`MYSQL_DATABASE` <br /> 
-`MYSQL_ROOT_PASSWORD` <br />
-`MYSQL_USER` <br />
-`MYSQL_PASSWORD` <br />
-`MYSQL_HOST` <br />
-`MYSQL_PORT` <br />
-`MYSQL_PROTOCOL` <br />
+`POSTGRES_DATABASE` <br /> 
+`POSTGRES_ROOT_PASSWORD` <br />
+`POSTGRES_USER` <br />
+`POSTGRES_PASSWORD` <br />
+`POSTGRES_HOST` <br />
+`POSTGRES_PORT` <br />
+`POSTGRES_PROTOCOL` <br />
 
 ## Swagger docs
 First install the Swagger CLI called `swag`.

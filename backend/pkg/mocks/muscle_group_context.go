@@ -3,6 +3,7 @@ package mocks
 import (
 	"database/sql"
 	"fmt"
+	"strings"
 
 	"github.com/Jaim010/jaim-io/backend/pkg/models"
 )
@@ -78,4 +79,19 @@ func (c *MockMuscleGroupContext) Remove(MuscleGroup models.MuscleGroup) error {
 	}
 
 	return fmt.Errorf("muscle group not found")
+}
+
+func (c *MockMuscleGroupContext) Exists(name string) (bool, error) {
+	var mgs = []models.MuscleGroup{
+		{Id: 1, Name: "Chest", Description: "Lorem ipsum", ImagePath: "/images/chest"},
+		{Id: 2, Name: "Tricep", Description: "Lorem ipsum", ImagePath: "/images/tricep"},
+	}
+
+	low_name := strings.ToLower(name)
+	for _, mg := range mgs {
+		if strings.ToLower(mg.Name) == low_name {
+			return true, nil
+		}
+	}
+	return false, nil
 }

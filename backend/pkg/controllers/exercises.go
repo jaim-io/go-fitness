@@ -101,6 +101,9 @@ func (env *Env) PutExercise(c *gin.Context) {
 		return
 	}
 
+	// ex_exists, err := env.ExerciseContext.Exists(updatedExercise.Name)
+	// mgs_exists, err := env.MuscleGroupContext.Exists(newExercise.MuscleGroups)
+
 	if err := env.ExerciseContext.Update(id, updatedExercise); err != nil {
 		if _, err := env.ExerciseContext.GetById(id); err != nil {
 			c.IndentedJSON(http.StatusNotFound, gin.H{"error": err.Error()})
@@ -133,6 +136,14 @@ func (env *Env) PostExercise(c *gin.Context) {
 
 	if empty := newExercise.Description == "" || newExercise.ImagePath == "" || newExercise.VideoLink == "" || len(newExercise.MuscleGroups) == 0; empty {
 		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "exercise fields can't be completely empty"})
+		return
+	}
+
+	/////////////////// NOT TESTED YET ///////////////////
+	ex_exists, err := env.ExerciseContext.Exists(newExercise.Name)
+	if ex_exists {
+		err := fmt.Sprintf("exercise with name '%s' already exists", newExercise.Name)
+		c.IndentedJSON(http.StatusConflict, gin.H{"error": err})
 		return
 	}
 

@@ -3,6 +3,7 @@ package mocks
 import (
 	"database/sql"
 	"fmt"
+	"strings"
 
 	"github.com/Jaim010/jaim-io/backend/pkg/models"
 )
@@ -78,4 +79,19 @@ func (c *MockExerciseContext) Remove(exercise models.Exercise) error {
 	}
 
 	return fmt.Errorf("Exercise not found")
+}
+
+func (c *MockExerciseContext) Exists(name string) (bool, error) {
+	var exs = []models.Exercise{
+		{Id: 1, Name: "Barbell bench press", MuscleGroups: []string{"Chest", "Tricep"}, Description: "Lorem ipsum", ImagePath: "/images/bb_bench_press", VideoLink: "https://www.youtube.com/"},
+		{Id: 2, Name: "Bulgarian split squat", MuscleGroups: []string{"Quad", "Glute"}, Description: "Lorem ipsum", ImagePath: "/images/b_split_squad", VideoLink: "https://www.youtube.com/"},
+	}
+
+	low_name := strings.ToLower(name)
+	for _, ex := range exs {
+		if strings.ToLower(ex.Name) == low_name {
+			return true, nil
+		}
+	}
+	return false, nil
 }

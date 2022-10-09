@@ -1,13 +1,10 @@
-ADD muscle group tests
-ADD exercise tests
+CHANGE image_path -> image [FRONTEND/IExercise-IMuscleGroup] <br />
+CHANGE image upload muscle group API <br />
+CHANGE image upload exercise API <br />
 
-CHANGE image_path -> image [FRONTEND/IExercise-IMuscleGroup]
-CHANGE image upload muscle group API
-CHANGE image upload exercise API
-
-Frontend error handling
+Frontend error handling <br />
 Check if this:
-  ```
+  ```tsx
   useEffect(() => {
     const request = fetch(`${endpoint}/${id}`);
     request
@@ -23,7 +20,7 @@ Check if this:
       });
   ```
 Should be changed to this:
-  ```
+  ```tsx
   useEffect(() => {
     const request = fetch(`${endpoint}/${id}`);
     request
@@ -36,14 +33,21 @@ Should be changed to this:
       })
   ```
 
-PUT-POST exercise should check if musclegroup exists
-  if TRUE
-    - update the tables(exercises, exercise_muscle_groups)
-  else if FALSE
-    - reject request
+PUT-POST exercise should check if musclegroup exists <br />
+if TRUE <br />
+  - update the tables(exercises, exercise_muscle_groups) <br />
+else if FALSE <br />
+  - reject request <br />
+- Update testcases <br />
 
-DELETE exercise should remove relation from exercise_muscle_groups tables
-  - update exercise_muscle_groups table
+DELETE exercise should remove relation from exercise_muscle_groups tables <br />
+  - update exercise_muscle_groups table <br />
 
-DELETE musclegroup should relation from exercise_muscle_groups tables
-  - update exercise_muscle_groups table
+DELETE musclegroup should relation from exercise_muscle_groups tables <br />
+  - update exercise_muscle_groups table <br />
+
+
+When adding new exercise <br />
+  option to choos from existing musclegroup  <br />
+    or  <br />
+  create new <br />
