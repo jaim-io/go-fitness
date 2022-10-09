@@ -55,29 +55,29 @@ jobs:
           yarn run build --if-present
           yarn run test
       
-  opensource-security:
-    runs-on: ubuntu-latest
+#   opensource-security:
+#     runs-on: ubuntu-latest
 
-    steps:
-      - uses: actions/checkout@master
-      - uses: snyk/actions/setup@master
+#     steps:
+#       - uses: actions/checkout@master
+#       - uses: snyk/actions/setup@master
     
-      - name: Set up Go 1.18
-        uses: actions/setup-go@v3
-        with:
-          go-version: 1.18
-          working-directory: ./backend/
+#       - name: Set up Go 1.18
+#         uses: actions/setup-go@v3
+#         with:
+#           go-version: 1.18
+#           working-directory: ./backend/
           
-      - name: Set up Node.js 18.x
-        uses: actions/setup-node@v3.4.1
-        with:
-          node-version: 18.x
-          working-directory: ./frontend/
+#       - name: Set up Node.js 18.x
+#         uses: actions/setup-node@v3.4.1
+#         with:
+#           node-version: 18.x
+#           working-directory: ./frontend/
   
-      - name: Run Snyk to check for vulnerabilities
-        run: snyk test --all-projects --detection-depth=99 --target-dir ./backend/ --target-dir ./frontend/
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+#       - name: Run Snyk to check for vulnerabilities
+#         run: snyk test --all-projects --detection-depth=99 --target-dir ./backend/ --target-dir ./frontend/
+#         env:
+#           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
   code-security:
     runs-on: ubuntu-latest
