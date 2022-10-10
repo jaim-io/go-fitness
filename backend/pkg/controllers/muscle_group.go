@@ -27,8 +27,10 @@ func (env *Env) GetAllMuscleGroups(c *gin.Context) {
 	mgs, err := env.MuscleGroupContext.GetAll()
 	if err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
 	} else {
 		c.IndentedJSON(http.StatusOK, mgs)
+		return
 	}
 }
 
@@ -99,7 +101,13 @@ func (env *Env) PutMuscleGroup(c *gin.Context) {
 		return
 	}
 
+	// Checks if muscle group exists
+	// If muscle group already exists, reject request
 	mg_exists, err := env.MuscleGroupContext.ExistsExcludingId(updatedMuscleGroup.Name, updatedMuscleGroup.Id)
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
 	if mg_exists {
 		err := fmt.Sprintf("another muscle group with name '%s' already exists", updatedMuscleGroup.Name)
 		c.IndentedJSON(http.StatusConflict, gin.H{"error": err})
@@ -141,7 +149,13 @@ func (env *Env) PostMuscleGroup(c *gin.Context) {
 		return
 	}
 
+	// Checks if muscle group exists
+	// If muscle group already exists, reject request
 	mg_exists, err := env.MuscleGroupContext.Exists(newMuscleGroup.Name)
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
 	if mg_exists {
 		err := fmt.Sprintf("a muscle group with name '%s' already exists", newMuscleGroup.Name)
 		c.IndentedJSON(http.StatusConflict, gin.H{"error": err})
@@ -151,6 +165,7 @@ func (env *Env) PostMuscleGroup(c *gin.Context) {
 	exercise, err := env.MuscleGroupContext.Add(newMuscleGroup)
 	if err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
 	}
 
 	c.IndentedJSON(http.StatusCreated, exercise)

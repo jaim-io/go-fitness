@@ -22,5 +22,6 @@ type Env struct {
 		Remove(muscleGroup models.MuscleGroup) error
 		Exists(name string) (bool, error)
 		ExistsExcludingId(name string, id uint32) (bool, error)
+		ExistsArr(names []string) (bool, error)
 	}
 }

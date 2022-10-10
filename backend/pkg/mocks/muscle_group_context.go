@@ -110,3 +110,20 @@ func (c *MockMuscleGroupContext) ExistsExcludingId(name string, id uint32) (bool
 	}
 	return false, nil
 }
+
+func (c *MockMuscleGroupContext) ExistsArr(names []string) (bool, error) {
+	var mgs = []models.MuscleGroup{
+		{Id: 1, Name: "Chest", Description: "Lorem ipsum", ImagePath: "/images/chest"},
+		{Id: 2, Name: "Tricep", Description: "Lorem ipsum", ImagePath: "/images/tricep"},
+	}
+
+	for _, name := range names {
+		low_name := strings.ToLower(name)
+		for _, mg := range mgs {
+			if strings.ToLower(mg.Name) == low_name {
+				return true, nil
+			}
+		}
+	}
+	return false, nil
+}

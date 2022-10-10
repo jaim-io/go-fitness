@@ -2,6 +2,7 @@ package models
 
 import (
 	"context"
+	"strings"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -135,4 +136,24 @@ func (c MuscleGroupContext) ExistsExcludingId(name string, id uint32) (bool, err
 	}
 
 	return exists, nil
+}
+
+func (c MuscleGroupContext) ExistsArr(names []string) (bool, error) {
+	low_names := make([]string, len(names))
+	for i, name := range names {
+		low_names[i] = strings.ToLower(name)
+	}
+
+	var count int
+	row := c.DB.QueryRow(context.Background(), `
+		SELECT COUNT(*)
+		FROM muscle_groups
+		WHERE LOWER(name) = ANY ($1)
+	`, low_names)
+
+	if err := row.Scan(&count); err != nil {
+		return false, err
+	}
+
+	return len(names) == count, nil
 }
