@@ -23,6 +23,8 @@ services:
     container_name: jaimio-api
     env_file:
       - ./backend/.env
+    volumes:
+      - ./backend/logs:/var/log/jaimio/:rw
     ports: 
       - 8080:8080
     expose:

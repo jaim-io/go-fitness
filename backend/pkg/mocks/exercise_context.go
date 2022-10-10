@@ -81,7 +81,7 @@ func (c *MockExerciseContext) Remove(exercise models.Exercise) error {
 	return fmt.Errorf("Exercise not found")
 }
 
-func (c *MockExerciseContext) Exists(name string) (bool, error) {
+func (c *MockExerciseContext) NameExists(name string) (bool, error) {
 	var exs = []models.Exercise{
 		{Id: 1, Name: "Barbell bench press", MuscleGroups: []string{"Chest", "Tricep"}, Description: "Lorem ipsum", ImagePath: "/images/bb_bench_press", VideoLink: "https://www.youtube.com/"},
 		{Id: 2, Name: "Bulgarian split squat", MuscleGroups: []string{"Quad", "Glute"}, Description: "Lorem ipsum", ImagePath: "/images/b_split_squad", VideoLink: "https://www.youtube.com/"},
@@ -96,7 +96,7 @@ func (c *MockExerciseContext) Exists(name string) (bool, error) {
 	return false, nil
 }
 
-func (c *MockExerciseContext) ExistsExcludingId(name string, id uint32) (bool, error) {
+func (c *MockExerciseContext) NameExistsExcludingId(name string, id uint32) (bool, error) {
 	var exs = []models.Exercise{
 		{Id: 1, Name: "Barbell bench press", MuscleGroups: []string{"Chest", "Tricep"}, Description: "Lorem ipsum", ImagePath: "/images/bb_bench_press", VideoLink: "https://www.youtube.com/"},
 		{Id: 2, Name: "Bulgarian split squat", MuscleGroups: []string{"Quad", "Glute"}, Description: "Lorem ipsum", ImagePath: "/images/b_split_squad", VideoLink: "https://www.youtube.com/"},
@@ -109,4 +109,8 @@ func (c *MockExerciseContext) ExistsExcludingId(name string, id uint32) (bool, e
 		}
 	}
 	return false, nil
+}
+
+func (c *MockExerciseContext) RemoveUnusedRelation(exercise models.Exercise) error {
+	return nil
 }

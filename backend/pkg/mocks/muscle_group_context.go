@@ -81,7 +81,7 @@ func (c *MockMuscleGroupContext) Remove(MuscleGroup models.MuscleGroup) error {
 	return fmt.Errorf("muscle group not found")
 }
 
-func (c *MockMuscleGroupContext) Exists(name string) (bool, error) {
+func (c *MockMuscleGroupContext) NameExists(name string) (bool, error) {
 	var mgs = []models.MuscleGroup{
 		{Id: 1, Name: "Chest", Description: "Lorem ipsum", ImagePath: "/images/chest"},
 		{Id: 2, Name: "Tricep", Description: "Lorem ipsum", ImagePath: "/images/tricep"},
@@ -96,7 +96,7 @@ func (c *MockMuscleGroupContext) Exists(name string) (bool, error) {
 	return false, nil
 }
 
-func (c *MockMuscleGroupContext) ExistsExcludingId(name string, id uint32) (bool, error) {
+func (c *MockMuscleGroupContext) NameExistsExcludingId(name string, id uint32) (bool, error) {
 	var mgs = []models.MuscleGroup{
 		{Id: 1, Name: "Chest", Description: "Lorem ipsum", ImagePath: "/images/chest"},
 		{Id: 2, Name: "Tricep", Description: "Lorem ipsum", ImagePath: "/images/tricep"},
@@ -111,7 +111,7 @@ func (c *MockMuscleGroupContext) ExistsExcludingId(name string, id uint32) (bool
 	return false, nil
 }
 
-func (c *MockMuscleGroupContext) ExistsArr(names []string) (bool, error) {
+func (c *MockMuscleGroupContext) NamesExists(names []string) (bool, error) {
 	var mgs = []models.MuscleGroup{
 		{Id: 1, Name: "Chest", Description: "Lorem ipsum", ImagePath: "/images/chest"},
 		{Id: 2, Name: "Tricep", Description: "Lorem ipsum", ImagePath: "/images/tricep"},
@@ -126,4 +126,8 @@ func (c *MockMuscleGroupContext) ExistsArr(names []string) (bool, error) {
 		}
 	}
 	return false, nil
+}
+
+func (c MockMuscleGroupContext) RemoveUnusedRelation(muscleGroup models.MuscleGroup) error {
+	return nil
 }

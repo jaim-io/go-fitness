@@ -11,8 +11,9 @@ type Env struct {
 		Update(id uint32, exercis models.Exercise) error
 		Add(exercise models.Exercise) (models.Exercise, error)
 		Remove(exercise models.Exercise) error
-		Exists(name string) (bool, error)
-		ExistsExcludingId(name string, id uint32) (bool, error)
+		RemoveUnusedRelation(exercise models.Exercise) error
+		NameExists(name string) (bool, error)
+		NameExistsExcludingId(name string, id uint32) (bool, error)
 	}
 	MuscleGroupContext interface {
 		GetAll() ([]models.MuscleGroup, error)
@@ -20,8 +21,9 @@ type Env struct {
 		Update(id uint32, muscleGroup models.MuscleGroup) error
 		Add(muscleGroup models.MuscleGroup) (models.MuscleGroup, error)
 		Remove(muscleGroup models.MuscleGroup) error
-		Exists(name string) (bool, error)
-		ExistsExcludingId(name string, id uint32) (bool, error)
-		ExistsArr(names []string) (bool, error)
+		RemoveUnusedRelation(exercise models.MuscleGroup) error
+		NameExists(name string) (bool, error)
+		NameExistsExcludingId(name string, id uint32) (bool, error)
+		NamesExists(names []string) (bool, error)
 	}
 }

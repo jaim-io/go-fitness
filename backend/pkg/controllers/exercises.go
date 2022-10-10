@@ -104,7 +104,7 @@ func (env *Env) PutExercise(c *gin.Context) {
 
 	// Checks if exercise exists
 	// If exercise already exists, reject request
-	ex_exists, err := env.ExerciseContext.Exists(updatedExercise.Name)
+	ex_exists, err := env.ExerciseContext.NameExists(updatedExercise.Name)
 	if err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -117,7 +117,7 @@ func (env *Env) PutExercise(c *gin.Context) {
 
 	// Checks if all muscle groups exist
 	// If not rejects request
-	mgs_exist, err := env.MuscleGroupContext.ExistsArr(updatedExercise.MuscleGroups)
+	mgs_exist, err := env.MuscleGroupContext.NamesExists(updatedExercise.MuscleGroups)
 	if err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -166,7 +166,7 @@ func (env *Env) PostExercise(c *gin.Context) {
 
 	// Checks if exercise exists
 	// If exercise already exists, reject request
-	ex_exists, err := env.ExerciseContext.Exists(newExercise.Name)
+	ex_exists, err := env.ExerciseContext.NameExists(newExercise.Name)
 	if err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -179,7 +179,7 @@ func (env *Env) PostExercise(c *gin.Context) {
 
 	// Checks if all muscle groups exist
 	// If not rejects request
-	mgs_exist, err := env.MuscleGroupContext.ExistsArr(newExercise.MuscleGroups)
+	mgs_exist, err := env.MuscleGroupContext.NamesExists(newExercise.MuscleGroups)
 	if err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -229,6 +229,12 @@ func (env *Env) DeleteExercise(c *gin.Context) {
 			return
 		}
 
+		c.IndentedJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	err = env.ExerciseContext.RemoveUnusedRelation(exercise)
+	if err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}

@@ -20,6 +20,7 @@
 
 /bin/
 /backend/postgres-data
+/backend/logs
 
 ## Frontend-React
 # dependencies

@@ -104,7 +104,7 @@ func (c MuscleGroupContext) Remove(muscleGroup MuscleGroup) error {
 	return nil
 }
 
-func (c MuscleGroupContext) Exists(name string) (bool, error) {
+func (c MuscleGroupContext) NameExists(name string) (bool, error) {
 	var exists bool
 	row := c.DB.QueryRow(context.Background(), `
 		SELECT EXISTS(
@@ -121,7 +121,7 @@ func (c MuscleGroupContext) Exists(name string) (bool, error) {
 	return exists, nil
 }
 
-func (c MuscleGroupContext) ExistsExcludingId(name string, id uint32) (bool, error) {
+func (c MuscleGroupContext) NameExistsExcludingId(name string, id uint32) (bool, error) {
 	var exists bool
 	row := c.DB.QueryRow(context.Background(), `
 		SELECT EXISTS(
@@ -138,7 +138,7 @@ func (c MuscleGroupContext) ExistsExcludingId(name string, id uint32) (bool, err
 	return exists, nil
 }
 
-func (c MuscleGroupContext) ExistsArr(names []string) (bool, error) {
+func (c MuscleGroupContext) NamesExists(names []string) (bool, error) {
 	low_names := make([]string, len(names))
 	for i, name := range names {
 		low_names[i] = strings.ToLower(name)
@@ -156,4 +156,17 @@ func (c MuscleGroupContext) ExistsArr(names []string) (bool, error) {
 	}
 
 	return len(names) == count, nil
+}
+
+func (c MuscleGroupContext) RemoveUnusedRelation(muscleGroup MuscleGroup) error {
+	_, err := c.DB.Exec(context.Background(), `
+		DELETE FROM exercise_muscle_groups as emg
+		WHERE emg.muscle_group_id = $1
+	`, muscleGroup.Id)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

@@ -116,16 +116,17 @@ func (c ExerciseContext) Add(exercise Exercise) (Exercise, error) {
 func (c ExerciseContext) Remove(exercise Exercise) error {
 	_, err := c.DB.Exec(context.Background(), `
 		DELETE FROM exercises 
-		WHERE id=$1 AND name=$2 AND description=$3 AND image_path=$4, AND video_link=$5`,
+		WHERE id=$1 AND name=$2 AND description=$3 AND image_path=$4 AND video_link=$5`,
 		exercise.Id, exercise.Name, exercise.Description, exercise.ImagePath, exercise.VideoLink,
 	)
 	if err != nil {
 		return err
 	}
+
 	return nil
 }
 
-func (c ExerciseContext) Exists(name string) (bool, error) {
+func (c ExerciseContext) NameExists(name string) (bool, error) {
 	var exists bool
 	row := c.DB.QueryRow(context.Background(), `
 		SELECT EXISTS(
@@ -142,7 +143,7 @@ func (c ExerciseContext) Exists(name string) (bool, error) {
 	return exists, nil
 }
 
-func (c ExerciseContext) ExistsExcludingId(name string, id uint32) (bool, error) {
+func (c ExerciseContext) NameExistsExcludingId(name string, id uint32) (bool, error) {
 	var exists bool
 	row := c.DB.QueryRow(context.Background(), `
 		SELECT EXISTS(
@@ -157,4 +158,17 @@ func (c ExerciseContext) ExistsExcludingId(name string, id uint32) (bool, error)
 	}
 
 	return exists, nil
+}
+
+func (c ExerciseContext) RemoveUnusedRelation(exercise Exercise) error {
+	_, err := c.DB.Exec(context.Background(), `
+		DELETE FROM exercise_muscle_groups as emg
+		WHERE emg.exercise_id = $1
+	`, exercise.Id)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

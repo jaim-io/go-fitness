@@ -9,6 +9,15 @@ definitions:
         example: status bad request
         type: string
     type: object
+  httputil.HTTPOk:
+    properties:
+      code:
+        example: 200
+        type: integer
+      message:
+        example: request succesfull
+        type: string
+    type: object
   models.Exercise:
     properties:
       description:
@@ -124,6 +133,10 @@ paths:
       produces:
       - application/json
       responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httputil.HTTPOk'
         "204":
           description: No Content
         "400":

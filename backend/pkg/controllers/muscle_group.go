@@ -103,7 +103,7 @@ func (env *Env) PutMuscleGroup(c *gin.Context) {
 
 	// Checks if muscle group exists
 	// If muscle group already exists, reject request
-	mg_exists, err := env.MuscleGroupContext.ExistsExcludingId(updatedMuscleGroup.Name, updatedMuscleGroup.Id)
+	mg_exists, err := env.MuscleGroupContext.NameExistsExcludingId(updatedMuscleGroup.Name, updatedMuscleGroup.Id)
 	if err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -151,7 +151,7 @@ func (env *Env) PostMuscleGroup(c *gin.Context) {
 
 	// Checks if muscle group exists
 	// If muscle group already exists, reject request
-	mg_exists, err := env.MuscleGroupContext.Exists(newMuscleGroup.Name)
+	mg_exists, err := env.MuscleGroupContext.NameExists(newMuscleGroup.Name)
 	if err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -195,10 +195,16 @@ func (env *Env) DeleteMuscleGroup(c *gin.Context) {
 	muscleGroup, err := env.MuscleGroupContext.GetById(id)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			c.IndentedJSON(http.StatusNotFound, gin.H{"error": "exercise not found"})
+			c.IndentedJSON(http.StatusNotFound, gin.H{"error": "muscle group not found"})
 			return
 		}
 
+		c.IndentedJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	err = env.MuscleGroupContext.RemoveUnusedRelation(muscleGroup)
+	if err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
