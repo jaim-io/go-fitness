@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/Jaim010/jaim-io/backend/pkg/models"
+	"github.com/jackc/pgx/v5"
 )
 
 type MockMuscleGroupContext struct{}
@@ -128,6 +129,25 @@ func (c *MockMuscleGroupContext) NamesExists(names []string) (bool, error) {
 	return false, nil
 }
 
-func (c MockMuscleGroupContext) RemoveUnusedRelation(muscleGroup models.MuscleGroup) error {
-	return nil
+func (c *MockMuscleGroupContext) GetIdsByNames(names []string) ([]uint32, error) {
+	var mgs = []models.MuscleGroup{
+		{Id: 1, Name: "Chest", Description: "Lorem ipsum", ImagePath: "/images/chest"},
+		{Id: 2, Name: "Tricep", Description: "Lorem ipsum", ImagePath: "/images/tricep"},
+	}
+
+	var ids []uint32
+
+	for _, name := range names {
+		low_name := strings.ToLower(name)
+		for _, mg := range mgs {
+			if mg.Name == low_name {
+				ids = append(ids, mg.Id)
+			}
+		}
+	}
+
+	if len(ids) == 0 {
+		return nil, pgx.ErrNoRows
+	}
+	return ids, nil
 }

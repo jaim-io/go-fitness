@@ -203,7 +203,7 @@ func (env *Env) DeleteMuscleGroup(c *gin.Context) {
 		return
 	}
 
-	err = env.MuscleGroupContext.RemoveUnusedRelation(muscleGroup)
+	err = env.EMGContext.RemoveAllByMuscleGroup(muscleGroup)
 	if err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

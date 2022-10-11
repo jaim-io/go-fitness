@@ -2,8 +2,8 @@ package models
 
 import (
 	"context"
-	"strings"
 
+	"github.com/Jaim010/jaim-io/backend/pkg/utils/utils"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -139,10 +139,7 @@ func (c MuscleGroupContext) NameExistsExcludingId(name string, id uint32) (bool,
 }
 
 func (c MuscleGroupContext) NamesExists(names []string) (bool, error) {
-	low_names := make([]string, len(names))
-	for i, name := range names {
-		low_names[i] = strings.ToLower(name)
-	}
+	low_names := utils.LowerStrArr(names)
 
 	var count int
 	row := c.DB.QueryRow(context.Background(), `
@@ -169,4 +166,33 @@ func (c MuscleGroupContext) RemoveUnusedRelation(muscleGroup MuscleGroup) error 
 	}
 
 	return nil
+}
+
+func (c MuscleGroupContext) GetIdsByNames(names []string) ([]uint32, error) {
+	low_names := utils.LowerStrArr(names)
+
+	rows, err := c.DB.Query(context.Background(), `
+		SELECT id 
+		FROM muscle_groups
+		WHERE LOWER(name) = ANY ($1)
+	`, low_names)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var ids []uint32
+	for rows.Next() {
+		var id uint32
+		if err := rows.Scan(&id); err != nil {
+			return nil, err
+		}
+		ids = append(ids, id)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return ids, nil
 }

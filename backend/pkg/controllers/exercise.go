@@ -104,7 +104,7 @@ func (env *Env) PutExercise(c *gin.Context) {
 
 	// Checks if exercise exists
 	// If exercise already exists, reject request
-	ex_exists, err := env.ExerciseContext.NameExists(updatedExercise.Name)
+	ex_exists, err := env.ExerciseContext.NameExistsExcludingId(updatedExercise.Name, updatedExercise.Id)
 	if err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -125,6 +125,25 @@ func (env *Env) PutExercise(c *gin.Context) {
 	if !mgs_exist {
 		err := fmt.Sprintf("one or more muscle groups do not exist: %v", updatedExercise.MuscleGroups)
 		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": err})
+		return
+	}
+
+	// Removes all the current exercise_muscle_groups relations, related to the exercise
+	if err := env.EMGContext.RemoveAllByExercise(updatedExercise); err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, gin.H{"error": "RemoveUnusedByExercise: " + err.Error()})
+		return
+	}
+
+	// Gets all the muscle_groups IDs of the updated exercise
+	ids, err := env.MuscleGroupContext.GetIdsByNames(updatedExercise.MuscleGroups)
+	if err != nil && err != pgx.ErrNoRows {
+		c.IndentedJSON(http.StatusInternalServerError, gin.H{"error": "GetIdsByNames: " + err.Error()})
+		return
+	}
+
+	// Sets all new relations
+	if err := env.EMGContext.SetFromExercise(updatedExercise.Id, ids); err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, gin.H{"error": "SetFromExercise: " + err.Error()})
 		return
 	}
 
@@ -233,7 +252,7 @@ func (env *Env) DeleteExercise(c *gin.Context) {
 		return
 	}
 
-	err = env.ExerciseContext.RemoveUnusedRelation(exercise)
+	err = env.EMGContext.RemoveAllByExercise(exercise)
 	if err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

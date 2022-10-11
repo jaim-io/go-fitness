@@ -110,7 +110,3 @@ func (c *MockExerciseContext) NameExistsExcludingId(name string, id uint32) (boo
 	}
 	return false, nil
 }
-
-func (c *MockExerciseContext) RemoveUnusedRelation(exercise models.Exercise) error {
-	return nil
-}
