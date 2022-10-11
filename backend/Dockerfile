@@ -11,7 +11,7 @@ COPY go.sum ./
 RUN go mod download
 
 COPY ./ ./
-RUN go build -o /docker-gs-ping ./cmd/main.go
+RUN go build -o /docker-gs-ping ./cmd/docker/main.go
 
 EXPOSE 8080
 
