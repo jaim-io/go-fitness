@@ -13,6 +13,6 @@ First install the Swagger CLI called `swag`.
 go get -u github.com/swaggo/swag/cmd/swag
 go install github.com/swaggo/swag/cmd/swag@latest
 ```
-Then run `swag init -d cmd/docker/ --pd pkg/controller` in `~/jaim-io/backend`.
+Then run `swag init -d cmd/docker/ --pd pkg/controllers/` in `~/jaim-io/backend`.
 
 To see the docs navigate to the host URI + `/api/v1/docs/index.html`.

@@ -19,9 +19,9 @@ import (
 // @Accept      json
 // @Produce     json
 // @Success     200 {array}   	models.MuscleGroup
-// @Failure     400 {object}   	httputil.HTTPError
-// @Failure     404 {object}  	httputil.HTTPError
-// @Failure     500 {object} 		httputil.HTTPError
+// @Failure     400 {object}   	httputils.HTTPError
+// @Failure     404 {object}  	httputils.HTTPError
+// @Failure     500 {object} 		httputils.HTTPError
 // @Router      /musclegroup [get]
 func (env *Env) GetAllMuscleGroups(c *gin.Context) {
 	mgs, err := env.MuscleGroupContext.GetAll()
@@ -42,9 +42,9 @@ func (env *Env) GetAllMuscleGroups(c *gin.Context) {
 // @Produce     json
 // @Param       id  path       int 								 true "Muscle group ID" Format(uint32)
 // @Success     200 {object} 	 models.MuscleGroup
-// @Failure     400 {object} 	 httputil.HTTPError
-// @Failure     404 {object} 	 httputil.HTTPError
-// @Failure     500 {object} 	 httputil.HTTPError
+// @Failure     400 {object} 	 httputils.HTTPError
+// @Failure     404 {object} 	 httputils.HTTPError
+// @Failure     500 {object} 	 httputils.HTTPError
 // @Router      /musclegroup/{id} [get]
 func (env *Env) GetMuscleGroupById(c *gin.Context) {
 	idStr := c.Param("id")
@@ -77,8 +77,8 @@ func (env *Env) GetMuscleGroupById(c *gin.Context) {
 // @Param       id  			path     int 								 true "Muscle group ID" Format(uint32)
 // @Param       exercise  body     models.MuscleGroup		 true "Update muscle group"
 // @Success     204
-// @Failure     400 			{object} httputil.HTTPError
-// @Failure     500 			{object} httputil.HTTPError
+// @Failure     400 			{object} httputils.HTTPError
+// @Failure     500 			{object} httputils.HTTPError
 // @Router      /musclegroup/{id} [put]
 func (env *Env) PutMuscleGroup(c *gin.Context) {
 	var updatedMuscleGroup models.MuscleGroup
@@ -133,8 +133,8 @@ func (env *Env) PutMuscleGroup(c *gin.Context) {
 // @Produce     json
 // @Param       musclegroup  body     models.MuscleGroup		 true "Add muscle group"
 // @Success     201				{object} models.MuscleGroup
-// @Failure     400 			{object} httputil.HTTPError
-// @Failure     500 			{object} httputil.HTTPError
+// @Failure     400 			{object} httputils.HTTPError
+// @Failure     500 			{object} httputils.HTTPError
 // @Router      /musclegroup/ [post]
 func (env *Env) PostMuscleGroup(c *gin.Context) {
 	var newMuscleGroup models.MuscleGroup
@@ -179,9 +179,9 @@ func (env *Env) PostMuscleGroup(c *gin.Context) {
 // @Produce     json
 // @Param       id  			path     int 								 true "Muscle group ID" Format(uint32)
 // @Success     204
-// @Failure     400 			{object} httputil.HTTPError
-// @Failure     404 			{object} httputil.HTTPError
-// @Failure     500 			{object} httputil.HTTPError
+// @Failure     400 			{object} httputils.HTTPError
+// @Failure     404 			{object} httputils.HTTPError
+// @Failure     500 			{object} httputils.HTTPError
 // @Router      /musclegroup/{id} [delete]
 func (env *Env) DeleteMuscleGroup(c *gin.Context) {
 	idStr := c.Param("id")

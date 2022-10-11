@@ -11,7 +11,7 @@ import (
 // @Tags        health
 // @Accept      json
 // @Produce     json
-// @Success     200 {object}   	httputil.HTTPOK
+// @Success     200 {object}   	httputils.HTTPOK
 // @Router      /health [get]
 func GetHealth(c *gin.Context) {
 	c.JSON(200, gin.H{

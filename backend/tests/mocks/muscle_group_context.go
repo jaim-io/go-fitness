@@ -1,7 +1,6 @@
 package mocks
 
 import (
-	"database/sql"
 	"fmt"
 	"strings"
 
@@ -31,7 +30,7 @@ func (c *MockMuscleGroupContext) GetById(id uint32) (models.MuscleGroup, error) 
 		}
 	}
 
-	return models.MuscleGroup{}, sql.ErrNoRows
+	return models.MuscleGroup{}, pgx.ErrNoRows
 }
 
 func (c *MockMuscleGroupContext) Update(id uint32, MuscleGroup models.MuscleGroup) error {

@@ -1,11 +1,11 @@
 package mocks
 
 import (
-	"database/sql"
 	"fmt"
 	"strings"
 
 	"github.com/Jaim010/jaim-io/backend/pkg/models"
+	"github.com/jackc/pgx/v5"
 )
 
 type MockExerciseContext struct{}
@@ -30,7 +30,7 @@ func (c *MockExerciseContext) GetById(id uint32) (models.Exercise, error) {
 		}
 	}
 
-	return models.Exercise{}, sql.ErrNoRows
+	return models.Exercise{}, pgx.ErrNoRows
 }
 
 func (c *MockExerciseContext) Update(id uint32, exercise models.Exercise) error {

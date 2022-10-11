@@ -19,9 +19,9 @@ import (
 // @Accept      json
 // @Produce     json
 // @Success     200 {array}   models.Exercise
-// @Failure     400 {object}  httputil.HTTPError
-// @Failure     404 {object}  httputil.HTTPError
-// @Failure     500 {object} 	httputil.HTTPError
+// @Failure     400 {object}  httputils.HTTPError
+// @Failure     404 {object}  httputils.HTTPError
+// @Failure     500 {object} 	httputils.HTTPError
 // @Router      /exercise [get]
 func (env *Env) GetAllExercises(c *gin.Context) {
 	exs, err := env.ExerciseContext.GetAll()
@@ -41,9 +41,9 @@ func (env *Env) GetAllExercises(c *gin.Context) {
 // @Produce     json
 // @Param       id  path       int 								 true "Exercise ID" Format(uint32)
 // @Success     200 {object} 	 models.Exercise
-// @Failure     400 {object} 	 httputil.HTTPError
-// @Failure     404 {object} 	 httputil.HTTPError
-// @Failure     500 {object} 	 httputil.HTTPError
+// @Failure     400 {object} 	 httputils.HTTPError
+// @Failure     404 {object} 	 httputils.HTTPError
+// @Failure     500 {object} 	 httputils.HTTPError
 // @Router      /exercise/{id} [get]
 func (env *Env) GetExerciseById(c *gin.Context) {
 	idStr := c.Param("id")
@@ -77,8 +77,8 @@ func (env *Env) GetExerciseById(c *gin.Context) {
 // @Param       id  			path     int 								 true "Exercise ID" Format(uint32)
 // @Param       exercise  body     models.Exercise		 true "Update exercise"
 // @Success     204
-// @Failure     400 			{object} httputil.HTTPError
-// @Failure     500 			{object} httputil.HTTPError
+// @Failure     400 			{object} httputils.HTTPError
+// @Failure     500 			{object} httputils.HTTPError
 // @Router      /exercise/{id} [put]
 func (env *Env) PutExercise(c *gin.Context) {
 	var updatedExercise models.Exercise
@@ -167,8 +167,8 @@ func (env *Env) PutExercise(c *gin.Context) {
 // @Produce     json
 // @Param       exercise  body     models.Exercise		 true "Add exercise"
 // @Success     201				{object} models.Exercise
-// @Failure     400 			{object} httputil.HTTPError
-// @Failure     500 			{object} httputil.HTTPError
+// @Failure     400 			{object} httputils.HTTPError
+// @Failure     500 			{object} httputils.HTTPError
 // @Router      /exercise/ [post]
 func (env *Env) PostExercise(c *gin.Context) {
 	var newExercise models.Exercise
@@ -228,9 +228,9 @@ func (env *Env) PostExercise(c *gin.Context) {
 // @Produce     json
 // @Param       id  			path     int 								 true "Exercise ID" Format(uint32)
 // @Success     204
-// @Failure     400 			{object} httputil.HTTPError
-// @Failure     404 			{object} httputil.HTTPError
-// @Failure     500 			{object} httputil.HTTPError
+// @Failure     400 			{object} httputils.HTTPError
+// @Failure     404 			{object} httputils.HTTPError
+// @Failure     500 			{object} httputils.HTTPError
 // @Router      /exercise/{id} [delete]
 func (env *Env) DeleteExercise(c *gin.Context) {
 	idStr := c.Param("id")

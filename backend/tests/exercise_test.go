@@ -96,25 +96,29 @@ type putExerciseTest struct {
 var putExerciseTests = []putExerciseTest{
 	{
 		GivenId:           "1",
-		GivenExerciseData: `{"id": 1, "name": "Military press", "muscle_groups": ["Shoulder"], "description": "Lorem ipsum", "image_path": "/images/military_press", "video_link": "https://www.youtube.com/"}`,
+		GivenExerciseData: `{"id": 1, "name": "Military press", "muscle_groups": ["Chest"], "description": "Lorem ipsum", "image_path": "/images/military_press", "video_link": "https://www.youtube.com/"}`,
 		ExpectedCode:      204},
 	{
 		GivenId:           "2",
-		GivenExerciseData: `{"id": 1, "name": "Military press", "muscle_groups": ["Shoulder"], "description": "Lorem ipsum", "image_path": "/images/military_press", "video_link": "https://www.youtube.com/"}`,
+		GivenExerciseData: `{"id": 1, "name": "Military press", "muscle_groups": ["Chest"], "description": "Lorem ipsum", "image_path": "/images/military_press", "video_link": "https://www.youtube.com/"}`,
 		ExpectedCode:      400},
 	{
 		GivenId:           "a",
-		GivenExerciseData: `{"id": 1, "name": "Military press", "muscle_groups": ["Shoulder"], "description": "Lorem ipsum", "image_path": "/images/military_press", "video_link": "https://www.youtube.com/"}`,
+		GivenExerciseData: `{"id": 1, "name": "Military press", "muscle_groups": ["Chest"], "description": "Lorem ipsum", "image_path": "/images/military_press", "video_link": "https://www.youtube.com/"}`,
 		ExpectedCode:      400},
 	{
 		GivenId:           "3",
-		GivenExerciseData: `{"id": 3, "name": "Military press", "muscle_groups": ["Shoulder"], "description": "Lorem ipsum", "image_path": "/images/military_press", "video_link": "https://www.youtube.com/"}`,
+		GivenExerciseData: `{"id": 3, "name": "Military press", "muscle_groups": ["Chest"], "description": "Lorem ipsum", "image_path": "/images/military_press", "video_link": "https://www.youtube.com/"}`,
 		ExpectedCode:      404},
 }
 
 func TestPutExercise(t *testing.T) {
 	// Arrange
-	env := controllers.Env{ExerciseContext: &mocks.MockExerciseContext{}}
+	env := controllers.Env{
+		ExerciseContext:    &mocks.MockExerciseContext{},
+		MuscleGroupContext: &mocks.MockMuscleGroupContext{},
+		EMGContext:         &mocks.MockExerciseMuscleGroupsContext{},
+	}
 	router := gin.Default()
 	router.PUT("/exercise/:id", env.PutExercise)
 
@@ -138,7 +142,7 @@ type postExerciseTest struct {
 
 var postExerciseTests = []postExerciseTest{
 	{
-		GivenExerciseData: `{"name": "Military press", "muscle_groups": ["Shoulder"], "description": "Lorem ipsum", "image_path": "/images/military_press", "video_link": "https://www.youtube.com/"}`,
+		GivenExerciseData: `{"name": "Military press", "muscle_groups": ["Chest"], "description": "Lorem ipsum", "image_path": "/images/military_press", "video_link": "https://www.youtube.com/"}`,
 		ExpectedCode:      201},
 	{
 		GivenExerciseData: `{"worked-muscles": "tricep"}`,
@@ -147,7 +151,11 @@ var postExerciseTests = []postExerciseTest{
 
 func TestPostExercise(t *testing.T) {
 	// Arrange
-	env := controllers.Env{ExerciseContext: &mocks.MockExerciseContext{}}
+	env := controllers.Env{
+		ExerciseContext:    &mocks.MockExerciseContext{},
+		MuscleGroupContext: &mocks.MockMuscleGroupContext{},
+		EMGContext:         &mocks.MockExerciseMuscleGroupsContext{},
+	}
 	router := gin.Default()
 	router.POST("/exercise/", env.PostExercise)
 
@@ -183,7 +191,10 @@ var deleteExerciseTests = []deleteExerciseTest{
 
 func TestDeleteExercise(t *testing.T) {
 	// Arrange
-	env := controllers.Env{ExerciseContext: &mocks.MockExerciseContext{}}
+	env := controllers.Env{
+		ExerciseContext: &mocks.MockExerciseContext{},
+		EMGContext:      &mocks.MockExerciseMuscleGroupsContext{},
+	}
 	router := gin.Default()
 	router.DELETE("/exercise/:id", env.DeleteExercise)
 

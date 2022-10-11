@@ -183,7 +183,10 @@ var deleteMuscleGroupTests = []deleteMuscleGroupTest{
 
 func TestDeleteMuscleGroup(t *testing.T) {
 	// Arrange
-	env := controllers.Env{MuscleGroupContext: &mocks.MockMuscleGroupContext{}}
+	env := controllers.Env{
+		MuscleGroupContext: &mocks.MockMuscleGroupContext{},
+		EMGContext:         &mocks.MockExerciseMuscleGroupsContext{},
+	}
 	router := gin.Default()
 	router.DELETE("/musclegroup/:id", env.DeleteMuscleGroup)
 
