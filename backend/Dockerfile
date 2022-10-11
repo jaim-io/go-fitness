@@ -5,19 +5,16 @@ FROM golang:1.18-alpine
 RUN apk update && apk add bash
 
 WORKDIR /app
-
 COPY go.mod ./
 COPY go.sum ./
+
 RUN go mod download
 
-# COPY *.go ./
 COPY ./ ./
-
 RUN go build -o /docker-gs-ping ./cmd/main.go
 
 EXPOSE 8080
 
 RUN chmod +x ./wait-for-it.sh ./docker-entrypoint.sh
 ENTRYPOINT [ "./docker-entrypoint.sh" ]
-
 CMD ["/docker-gs-ping"]

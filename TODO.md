@@ -1,3 +1,9 @@
+ PUT exercise should remove relation from exercise_muscle_groups tables <br />
+  - update exercise_muscle_groups table <br />
+
+ PUT musclegroup should relation from exercise_muscle_groups tables <br />
+  - update exercise_muscle_groups table <br />
+
 FEATURE Login
   DATABASE tables
   Backend 
@@ -41,12 +47,6 @@ Should be changed to this:
         return res.json();
       })
   ```
-
-DELETE && PUT exercise should remove relation from exercise_muscle_groups tables <br />
-  - update exercise_muscle_groups table <br />
-
-DELETE && PUT musclegroup should relation from exercise_muscle_groups tables <br />
-  - update exercise_muscle_groups table <br />
 
 
 When adding new exercise <br />

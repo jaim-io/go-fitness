@@ -50,7 +50,9 @@ func main() {
 	router := gin.Default()
 
 	config := cors.DefaultConfig()
-	config.AllowOrigins = []string{"http://localhost:3000"}
+	config.AllowOrigins = []string{
+		"http://localhost", "http://localhost:3000",
+	}
 	router.Use(cors.New(config))
 
 	router.GET("/health", controllers.GetHealth)
