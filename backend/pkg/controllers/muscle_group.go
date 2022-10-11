@@ -1,13 +1,13 @@
 package controllers
 
 import (
-	"database/sql"
 	"fmt"
 	"net/http"
 
 	_ "github.com/Jaim010/jaim-io/backend/pkg/httputil"
 	"github.com/Jaim010/jaim-io/backend/pkg/models"
 	"github.com/Jaim010/jaim-io/backend/pkg/utils/utils"
+	"github.com/jackc/pgx/v5"
 
 	"github.com/gin-gonic/gin"
 )
@@ -57,7 +57,7 @@ func (env *Env) GetMuscleGroupById(c *gin.Context) {
 
 	mg, err := env.MuscleGroupContext.GetById(id)
 	if err != nil {
-		if err == sql.ErrNoRows {
+		if err == pgx.ErrNoRows {
 			c.IndentedJSON(http.StatusNotFound, gin.H{"error": "exercise not found"})
 			return
 		} else {
@@ -194,7 +194,7 @@ func (env *Env) DeleteMuscleGroup(c *gin.Context) {
 
 	muscleGroup, err := env.MuscleGroupContext.GetById(id)
 	if err != nil {
-		if err == sql.ErrNoRows {
+		if err == pgx.ErrNoRows {
 			c.IndentedJSON(http.StatusNotFound, gin.H{"error": "muscle group not found"})
 			return
 		}
