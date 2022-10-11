@@ -63,9 +63,9 @@ func main() {
 	}
 	router.Use(cors.New(config))
 
-	router.GET("/health", controllers.GetHealth)
 	api := router.Group("/api/v1")
 	{
+		api.GET("/health", controllers.GetHealth)
 		api.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 		api.GET("/exercise", env.GetAllExercises)

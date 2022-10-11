@@ -9,7 +9,7 @@ CREATE TABLE exercises (
 CREATE TABLE muscle_groups(
   id          SERIAL              NOT NULL    PRIMARY KEY,
   name        VARCHAR(60)         NOT NULL    UNIQUE,
-  description   VARCHAR(512)      NOT NULL, 
+  description VARCHAR(512)      NOT NULL, 
   image_path  VARCHAR(1024)       NOT NULL
 );
 
@@ -26,12 +26,12 @@ VALUES
   (
     'Barbell bench press', 
     'The barbell bench press exercise is an upper body pressing movement. Commonly used to build muscle size and body strength; this exercise targets the upper body muscles including: chest, triceps, and shoulders.',
-    '/assets/images/exercises/barbell_bench_press',
+    '../../assets/images/exercises/barbell_bench_press',
     'https://www.youtube.com/watch?v=vcBig73ojpE'
   ),(
     'Preacher curl', 
     'The preacher curl is a variation of the traditional biceps curl. It is an isolation bicep exercise that allows you to practice your lifting form with a controlled movement supported by a preacher bench.',
-    '/assets/images/exercises/preacher_curl',
+    '../../assets/images/exercises/preacher_curl',
     'https://www.youtube.com/watch?v=fIWP-FRFNU0'
   )
   ;
