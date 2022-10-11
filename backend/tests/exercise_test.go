@@ -1,4 +1,4 @@
-package controllers
+package tests
 
 import (
 	"bytes"
@@ -7,9 +7,10 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/Jaim010/jaim-io/backend/pkg/mocks"
+	"github.com/Jaim010/jaim-io/backend/pkg/controllers"
 	"github.com/Jaim010/jaim-io/backend/pkg/models"
 	"github.com/Jaim010/jaim-io/backend/pkg/utils/testutils"
+	"github.com/Jaim010/jaim-io/backend/tests/mocks"
 	"github.com/gin-gonic/gin"
 )
 
@@ -20,7 +21,7 @@ func TestGetAllExercises(t *testing.T) {
 		{Id: 2, Name: "Bulgarian split squat", MuscleGroups: []string{"Quad", "Glute"}, Description: "Lorem ipsum", ImagePath: "/images/b_split_squad", VideoLink: "https://www.youtube.com/"},
 	}
 
-	env := Env{ExerciseContext: &mocks.MockExerciseContext{}}
+	env := controllers.Env{ExerciseContext: &mocks.MockExerciseContext{}}
 	router := gin.Default()
 	router.GET("/exercise/", env.GetAllExercises)
 
@@ -65,7 +66,7 @@ var getIdExerciseTests = []getIdExerciseTest{
 
 func TestGetExercise(t *testing.T) {
 	// Arrange
-	env := Env{ExerciseContext: &mocks.MockExerciseContext{}}
+	env := controllers.Env{ExerciseContext: &mocks.MockExerciseContext{}}
 	router := gin.Default()
 	router.GET("/exercise/:id", env.GetExerciseById)
 
@@ -113,7 +114,7 @@ var putExerciseTests = []putExerciseTest{
 
 func TestPutExercise(t *testing.T) {
 	// Arrange
-	env := Env{ExerciseContext: &mocks.MockExerciseContext{}}
+	env := controllers.Env{ExerciseContext: &mocks.MockExerciseContext{}}
 	router := gin.Default()
 	router.PUT("/exercise/:id", env.PutExercise)
 
@@ -146,7 +147,7 @@ var postExerciseTests = []postExerciseTest{
 
 func TestPostExercise(t *testing.T) {
 	// Arrange
-	env := Env{ExerciseContext: &mocks.MockExerciseContext{}}
+	env := controllers.Env{ExerciseContext: &mocks.MockExerciseContext{}}
 	router := gin.Default()
 	router.POST("/exercise/", env.PostExercise)
 
@@ -182,7 +183,7 @@ var deleteExerciseTests = []deleteExerciseTest{
 
 func TestDeleteExercise(t *testing.T) {
 	// Arrange
-	env := Env{ExerciseContext: &mocks.MockExerciseContext{}}
+	env := controllers.Env{ExerciseContext: &mocks.MockExerciseContext{}}
 	router := gin.Default()
 	router.DELETE("/exercise/:id", env.DeleteExercise)
 

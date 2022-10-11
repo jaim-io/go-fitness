@@ -1,7 +1,9 @@
-package utils
+package tests
 
 import (
 	"testing"
+
+	"github.com/Jaim010/jaim-io/backend/pkg/utils/utils"
 )
 
 type strToUint32Test struct {
@@ -21,7 +23,7 @@ var strToUint32Tests = []strToUint32Test{
 
 func TestStrToUint32(t *testing.T) {
 	for _, test := range strToUint32Tests {
-		_, err := StrToUint32(test.GivenId)
+		_, err := utils.StrToUint32(test.GivenId)
 
 		if (err != nil && test.ReturnsError == false) || (err == nil && test.ReturnsError == true) {
 			t.Errorf("Expected %v. Got %v\n", !test.ReturnsError, test.ReturnsError)

@@ -1,4 +1,4 @@
-package controllers
+package tests
 
 import (
 	"bytes"
@@ -7,9 +7,10 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/Jaim010/jaim-io/backend/pkg/mocks"
+	"github.com/Jaim010/jaim-io/backend/pkg/controllers"
 	"github.com/Jaim010/jaim-io/backend/pkg/models"
 	"github.com/Jaim010/jaim-io/backend/pkg/utils/testutils"
+	"github.com/Jaim010/jaim-io/backend/tests/mocks"
 	"github.com/gin-gonic/gin"
 )
 
@@ -20,7 +21,7 @@ func TestGetAllMuscleGroups(t *testing.T) {
 		{Id: 2, Name: "Tricep", Description: "Lorem ipsum", ImagePath: "/images/tricep"},
 	}
 
-	env := Env{MuscleGroupContext: &mocks.MockMuscleGroupContext{}}
+	env := controllers.Env{MuscleGroupContext: &mocks.MockMuscleGroupContext{}}
 	router := gin.Default()
 	router.GET("/musclegroup/", env.GetAllMuscleGroups)
 
@@ -65,7 +66,7 @@ var getIdMuscleGroupTests = []getIdMuscleGroupTest{
 
 func TestGetMuscleGroup(t *testing.T) {
 	// Arrange
-	env := Env{MuscleGroupContext: &mocks.MockMuscleGroupContext{}}
+	env := controllers.Env{MuscleGroupContext: &mocks.MockMuscleGroupContext{}}
 	router := gin.Default()
 	router.GET("/musclegroup/:id", env.GetMuscleGroupById)
 
@@ -113,7 +114,7 @@ var putMuscleGroupTests = []putMuscleGroupTest{
 
 func TestPutMuscleGroup(t *testing.T) {
 	// Arrange
-	env := Env{MuscleGroupContext: &mocks.MockMuscleGroupContext{}}
+	env := controllers.Env{MuscleGroupContext: &mocks.MockMuscleGroupContext{}}
 	router := gin.Default()
 	router.PUT("/musclegroup/:id", env.PutMuscleGroup)
 
@@ -146,7 +147,7 @@ var postMuscleGroupTests = []postMuscleGroupTest{
 
 func TestPostMuscleGroup(t *testing.T) {
 	// Arrange
-	env := Env{MuscleGroupContext: &mocks.MockMuscleGroupContext{}}
+	env := controllers.Env{MuscleGroupContext: &mocks.MockMuscleGroupContext{}}
 	router := gin.Default()
 	router.POST("/musclegroup/", env.PostMuscleGroup)
 
@@ -182,7 +183,7 @@ var deleteMuscleGroupTests = []deleteMuscleGroupTest{
 
 func TestDeleteMuscleGroup(t *testing.T) {
 	// Arrange
-	env := Env{MuscleGroupContext: &mocks.MockMuscleGroupContext{}}
+	env := controllers.Env{MuscleGroupContext: &mocks.MockMuscleGroupContext{}}
 	router := gin.Default()
 	router.DELETE("/musclegroup/:id", env.DeleteMuscleGroup)
 

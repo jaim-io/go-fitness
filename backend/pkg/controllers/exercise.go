@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
-	_ "github.com/Jaim010/jaim-io/backend/pkg/httputil"
 	"github.com/Jaim010/jaim-io/backend/pkg/models"
+	_ "github.com/Jaim010/jaim-io/backend/pkg/utils/httputils"
 	"github.com/Jaim010/jaim-io/backend/pkg/utils/utils"
 	"github.com/jackc/pgx/v5"
 
@@ -19,8 +19,8 @@ import (
 // @Accept      json
 // @Produce     json
 // @Success     200 {array}   models.Exercise
-// @Failure     400 {object}   httputil.HTTPError
-// @Failure     404 {object}  	httputil.HTTPError
+// @Failure     400 {object}  httputil.HTTPError
+// @Failure     404 {object}  httputil.HTTPError
 // @Failure     500 {object} 	httputil.HTTPError
 // @Router      /exercise [get]
 func (env *Env) GetAllExercises(c *gin.Context) {

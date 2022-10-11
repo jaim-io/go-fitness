@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
-	_ "github.com/Jaim010/jaim-io/backend/pkg/httputil"
 	"github.com/Jaim010/jaim-io/backend/pkg/models"
+	_ "github.com/Jaim010/jaim-io/backend/pkg/utils/httputils"
 	"github.com/Jaim010/jaim-io/backend/pkg/utils/utils"
 	"github.com/jackc/pgx/v5"
 
