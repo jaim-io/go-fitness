@@ -1,3 +1,9 @@
+## Frontend environment variables
+The following environment variables should be set before running the React App.<br />
+`REACT_APP_API_BASE` <br /> 
+`NODE_ENV` <br />
+For `docker-compose.yml` a `.env` file containing the environment variables above should be created. <br />
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

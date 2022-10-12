@@ -1,13 +1,13 @@
 package controllers
 
 import (
-	"database/sql"
 	"fmt"
 	"net/http"
 
-	_ "github.com/Jaim010/jaim-io/backend/pkg/httputil"
 	"github.com/Jaim010/jaim-io/backend/pkg/models"
-	"github.com/Jaim010/jaim-io/backend/pkg/utils"
+	_ "github.com/Jaim010/jaim-io/backend/pkg/utils/httputils"
+	"github.com/Jaim010/jaim-io/backend/pkg/utils/utils"
+	"github.com/jackc/pgx/v5"
 
 	"github.com/gin-gonic/gin"
 )
@@ -19,16 +19,18 @@ import (
 // @Accept      json
 // @Produce     json
 // @Success     200 {array}   	models.MuscleGroup
-// @Failure     400 {object}   	httputil.HTTPError
-// @Failure     404 {object}  	httputil.HTTPError
-// @Failure     500 {object} 		httputil.HTTPError
+// @Failure     400 {object}   	httputils.HTTPError
+// @Failure     404 {object}  	httputils.HTTPError
+// @Failure     500 {object} 		httputils.HTTPError
 // @Router      /musclegroup [get]
 func (env *Env) GetAllMuscleGroups(c *gin.Context) {
 	mgs, err := env.MuscleGroupContext.GetAll()
 	if err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
 	} else {
 		c.IndentedJSON(http.StatusOK, mgs)
+		return
 	}
 }
 
@@ -40,9 +42,9 @@ func (env *Env) GetAllMuscleGroups(c *gin.Context) {
 // @Produce     json
 // @Param       id  path       int 								 true "Muscle group ID" Format(uint32)
 // @Success     200 {object} 	 models.MuscleGroup
-// @Failure     400 {object} 	 httputil.HTTPError
-// @Failure     404 {object} 	 httputil.HTTPError
-// @Failure     500 {object} 	 httputil.HTTPError
+// @Failure     400 {object} 	 httputils.HTTPError
+// @Failure     404 {object} 	 httputils.HTTPError
+// @Failure     500 {object} 	 httputils.HTTPError
 // @Router      /musclegroup/{id} [get]
 func (env *Env) GetMuscleGroupById(c *gin.Context) {
 	idStr := c.Param("id")
@@ -55,7 +57,7 @@ func (env *Env) GetMuscleGroupById(c *gin.Context) {
 
 	mg, err := env.MuscleGroupContext.GetById(id)
 	if err != nil {
-		if err == sql.ErrNoRows {
+		if err == pgx.ErrNoRows {
 			c.IndentedJSON(http.StatusNotFound, gin.H{"error": "exercise not found"})
 			return
 		} else {
@@ -75,8 +77,8 @@ func (env *Env) GetMuscleGroupById(c *gin.Context) {
 // @Param       id  			path     int 								 true "Muscle group ID" Format(uint32)
 // @Param       exercise  body     models.MuscleGroup		 true "Update muscle group"
 // @Success     204
-// @Failure     400 			{object} httputil.HTTPError
-// @Failure     500 			{object} httputil.HTTPError
+// @Failure     400 			{object} httputils.HTTPError
+// @Failure     500 			{object} httputils.HTTPError
 // @Router      /musclegroup/{id} [put]
 func (env *Env) PutMuscleGroup(c *gin.Context) {
 	var updatedMuscleGroup models.MuscleGroup
@@ -99,6 +101,19 @@ func (env *Env) PutMuscleGroup(c *gin.Context) {
 		return
 	}
 
+	// Checks if muscle group exists
+	// If muscle group already exists, reject request
+	mg_exists, err := env.MuscleGroupContext.NameExistsExcludingId(updatedMuscleGroup.Name, updatedMuscleGroup.Id)
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	if mg_exists {
+		err := fmt.Sprintf("another muscle group with name '%s' already exists", updatedMuscleGroup.Name)
+		c.IndentedJSON(http.StatusConflict, gin.H{"error": err})
+		return
+	}
+
 	if err := env.MuscleGroupContext.Update(id, updatedMuscleGroup); err != nil {
 		if _, err := env.MuscleGroupContext.GetById(id); err != nil {
 			c.IndentedJSON(http.StatusNotFound, gin.H{"error": err.Error()})
@@ -118,8 +133,8 @@ func (env *Env) PutMuscleGroup(c *gin.Context) {
 // @Produce     json
 // @Param       musclegroup  body     models.MuscleGroup		 true "Add muscle group"
 // @Success     201				{object} models.MuscleGroup
-// @Failure     400 			{object} httputil.HTTPError
-// @Failure     500 			{object} httputil.HTTPError
+// @Failure     400 			{object} httputils.HTTPError
+// @Failure     500 			{object} httputils.HTTPError
 // @Router      /musclegroup/ [post]
 func (env *Env) PostMuscleGroup(c *gin.Context) {
 	var newMuscleGroup models.MuscleGroup
@@ -134,9 +149,23 @@ func (env *Env) PostMuscleGroup(c *gin.Context) {
 		return
 	}
 
+	// Checks if muscle group exists
+	// If muscle group already exists, reject request
+	mg_exists, err := env.MuscleGroupContext.NameExists(newMuscleGroup.Name)
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	if mg_exists {
+		err := fmt.Sprintf("a muscle group with name '%s' already exists", newMuscleGroup.Name)
+		c.IndentedJSON(http.StatusConflict, gin.H{"error": err})
+		return
+	}
+
 	exercise, err := env.MuscleGroupContext.Add(newMuscleGroup)
 	if err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
 	}
 
 	c.IndentedJSON(http.StatusCreated, exercise)
@@ -150,9 +179,9 @@ func (env *Env) PostMuscleGroup(c *gin.Context) {
 // @Produce     json
 // @Param       id  			path     int 								 true "Muscle group ID" Format(uint32)
 // @Success     204
-// @Failure     400 			{object} httputil.HTTPError
-// @Failure     404 			{object} httputil.HTTPError
-// @Failure     500 			{object} httputil.HTTPError
+// @Failure     400 			{object} httputils.HTTPError
+// @Failure     404 			{object} httputils.HTTPError
+// @Failure     500 			{object} httputils.HTTPError
 // @Router      /musclegroup/{id} [delete]
 func (env *Env) DeleteMuscleGroup(c *gin.Context) {
 	idStr := c.Param("id")
@@ -165,11 +194,17 @@ func (env *Env) DeleteMuscleGroup(c *gin.Context) {
 
 	muscleGroup, err := env.MuscleGroupContext.GetById(id)
 	if err != nil {
-		if err == sql.ErrNoRows {
-			c.IndentedJSON(http.StatusNotFound, gin.H{"error": "exercise not found"})
+		if err == pgx.ErrNoRows {
+			c.IndentedJSON(http.StatusNotFound, gin.H{"error": "muscle group not found"})
 			return
 		}
 
+		c.IndentedJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	err = env.EMGContext.RemoveAllByMuscleGroup(muscleGroup)
+	if err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}

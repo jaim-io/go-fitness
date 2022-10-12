@@ -64,14 +64,15 @@ func (c ExerciseContext) GetById(id uint32) (Exercise, error) {
 
 	row := c.DB.QueryRow(context.Background(), `
 		SELECT 
-		id, 
+			id, 
 			name, 
 			description, 
 			ARRAY(
 				SELECT DISTINCT ON (mg.name) mg.name 
 				FROM muscle_groups as mg 
 				JOIN exercise_muscle_groups as emg
-				ON emg.exercise_id=$1) as "muscle_groups",
+					ON emg.muscle_group_id=mg.id
+				WHERE emg.exercise_id=$1) as "muscle_groups",
 			image_path, 
 			video_link 
 		FROM exercises 
@@ -86,7 +87,7 @@ func (c ExerciseContext) GetById(id uint32) (Exercise, error) {
 func (c ExerciseContext) Update(id uint32, exercise Exercise) error {
 	_, err := c.DB.Exec(context.Background(), `
 		UPDATE exercises
-		SET name=$1, SET description=$2, SET image_path=$3, SET video_link=$4
+		SET name=$1, description=$2, image_path=$3, video_link=$4
 		WHERE id=$5
 		`, exercise.Name, exercise.Description, exercise.ImagePath, exercise.VideoLink, exercise.Id,
 	)
@@ -98,25 +99,76 @@ func (c ExerciseContext) Update(id uint32, exercise Exercise) error {
 }
 
 func (c ExerciseContext) Add(exercise Exercise) (Exercise, error) {
-	_, err := c.DB.Exec(context.Background(), `
+	var id int
+	row := c.DB.QueryRow(context.Background(), `
 		INSERT INTO exercises (name, description, image_path, video_link)
-		VALUES ($1, $2, $3, $4)`, exercise.Name, exercise.Description, exercise.ImagePath, exercise.VideoLink,
+		VALUES ($1, $2, $3, $4)
+		RETURNING id`, exercise.Name, exercise.Description, exercise.ImagePath, exercise.VideoLink,
 	)
 
-	if err != nil {
+	if err := row.Scan(&id); err != nil {
 		return Exercise{}, err
 	}
+	exercise.Id = uint32(id)
 	return exercise, nil
 }
 
 func (c ExerciseContext) Remove(exercise Exercise) error {
 	_, err := c.DB.Exec(context.Background(), `
 		DELETE FROM exercises 
-		WHERE id=$1 AND name=$2 AND description=$3 AND image_path=$4, AND video_link=$5`,
+		WHERE id=$1 AND name=$2 AND description=$3 AND image_path=$4 AND video_link=$5`,
 		exercise.Id, exercise.Name, exercise.Description, exercise.ImagePath, exercise.VideoLink,
 	)
 	if err != nil {
 		return err
 	}
+
+	return nil
+}
+
+func (c ExerciseContext) NameExists(name string) (bool, error) {
+	var exists bool
+	row := c.DB.QueryRow(context.Background(), `
+		SELECT EXISTS(
+			SELECT id
+			FROM exercises
+			WHERE LOWER(name)=LOWER($1)
+		)
+	`, name)
+
+	if err := row.Scan(&exists); err != nil {
+		return false, err
+	}
+
+	return exists, nil
+}
+
+func (c ExerciseContext) NameExistsExcludingId(name string, id uint32) (bool, error) {
+	var exists bool
+	row := c.DB.QueryRow(context.Background(), `
+		SELECT EXISTS(
+			SELECT id
+			FROM exercises
+			WHERE LOWER(name)=LOWER($1) AND id!=$2
+		)
+	`, name, id)
+
+	if err := row.Scan(&exists); err != nil {
+		return false, err
+	}
+
+	return exists, nil
+}
+
+func (c ExerciseContext) RemoveUnusedRelation(exercise Exercise) error {
+	_, err := c.DB.Exec(context.Background(), `
+		DELETE FROM exercise_muscle_groups as emg
+		WHERE emg.exercise_id = $1
+	`, exercise.Id)
+
+	if err != nil {
+		return err
+	}
+
 	return nil
 }

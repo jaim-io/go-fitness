@@ -1,18 +1,42 @@
 basePath: /api/v1
 definitions:
-  httputil.HTTPError:
+  httputils.HTTPError:
     properties:
-      code:
-        example: 400
-        type: integer
       message:
         example: status bad request
         type: string
     type: object
+  httputils.HTTPOK:
+    properties:
+      message:
+        example: status OK
+        type: string
+    type: object
   models.Exercise:
     properties:
+      description:
+        type: string
       id:
         type: integer
+      image_path:
+        type: string
+      muscle_groups:
+        items:
+          type: string
+        type: array
+      name:
+        type: string
+      video_link:
+        type: string
+    type: object
+  models.MuscleGroup:
+    properties:
+      description:
+        type: string
+      id:
+        type: integer
+      image_path:
+        type: string
       name:
         type: string
     type: object
@@ -46,15 +70,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/httputil.HTTPError'
+            $ref: '#/definitions/httputils.HTTPError'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/httputil.HTTPError'
+            $ref: '#/definitions/httputils.HTTPError'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/httputil.HTTPError'
+            $ref: '#/definitions/httputils.HTTPError'
       summary: Get exercises
       tags:
       - exercises
@@ -80,11 +104,11 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/httputil.HTTPError'
+            $ref: '#/definitions/httputils.HTTPError'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/httputil.HTTPError'
+            $ref: '#/definitions/httputils.HTTPError'
       summary: Add exercise
       tags:
       - exercises
@@ -108,15 +132,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/httputil.HTTPError'
+            $ref: '#/definitions/httputils.HTTPError'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/httputil.HTTPError'
+            $ref: '#/definitions/httputils.HTTPError'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/httputil.HTTPError'
+            $ref: '#/definitions/httputils.HTTPError'
       summary: Delete an exercise
       tags:
       - exercises
@@ -141,15 +165,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/httputil.HTTPError'
+            $ref: '#/definitions/httputils.HTTPError'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/httputil.HTTPError'
+            $ref: '#/definitions/httputils.HTTPError'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/httputil.HTTPError'
+            $ref: '#/definitions/httputils.HTTPError'
       summary: Get exercise
       tags:
       - exercises
@@ -178,12 +202,184 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/httputil.HTTPError'
+            $ref: '#/definitions/httputils.HTTPError'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/httputil.HTTPError'
+            $ref: '#/definitions/httputils.HTTPError'
       summary: Update exercise
       tags:
       - exercises
+  /health:
+    get:
+      consumes:
+      - application/json
+      description: get server health
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httputils.HTTPOK'
+      summary: Get server health
+      tags:
+      - health
+  /musclegroup:
+    get:
+      consumes:
+      - application/json
+      description: get muscle groups
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.MuscleGroup'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputils.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httputils.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputils.HTTPError'
+      summary: Get muscle groups
+      tags:
+      - muscle_groups
+  /musclegroup/:
+    post:
+      consumes:
+      - application/json
+      description: add by json muscle group
+      parameters:
+      - description: Add muscle group
+        in: body
+        name: musclegroup
+        required: true
+        schema:
+          $ref: '#/definitions/models.MuscleGroup'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.MuscleGroup'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputils.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputils.HTTPError'
+      summary: Add muscle group
+      tags:
+      - muscle_groups
+  /musclegroup/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: delete by muscle group id
+      parameters:
+      - description: Muscle group ID
+        format: uint32
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputils.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httputils.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputils.HTTPError'
+      summary: Delete an muscle group
+      tags:
+      - muscle_groups
+    get:
+      consumes:
+      - application/json
+      description: get muscle group by ID
+      parameters:
+      - description: Muscle group ID
+        format: uint32
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.MuscleGroup'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputils.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httputils.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputils.HTTPError'
+      summary: Get muscle group
+      tags:
+      - muscle_groups
+    put:
+      consumes:
+      - application/json
+      description: update by json muscle group
+      parameters:
+      - description: Muscle group ID
+        format: uint32
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update muscle group
+        in: body
+        name: exercise
+        required: true
+        schema:
+          $ref: '#/definitions/models.MuscleGroup'
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputils.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputils.HTTPError'
+      summary: Update muscle group
+      tags:
+      - muscle_groups
 swagger: "2.0"

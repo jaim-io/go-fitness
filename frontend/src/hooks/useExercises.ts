@@ -18,8 +18,8 @@ const useExercises = (): IAPIResult<IExercise[]> => {
         }
         return res.json();
       })
-      .then((apiResult) => {
-        setExercises(apiResult);
+      .then((res) => {
+        setExercises(res);
       })
   }, []);
   

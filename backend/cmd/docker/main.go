@@ -1,7 +1,9 @@
 package main
 
 import (
+	"io"
 	"log"
+	"os"
 
 	_ "github.com/Jaim010/jaim-io/backend/docs"
 	"github.com/Jaim010/jaim-io/backend/pkg/controllers"
@@ -28,25 +30,35 @@ import (
 // @host     localhost:8080
 // @BasePath /api/v1
 func main() {
-
 	db, err := database.Init()
 	if err != nil {
 		log.Fatalf("Failed to connect to database. Error: %s", err)
 	}
 
 	env := &controllers.Env{
-		ExerciseContext: models.ExerciseContext{DB: db},
+		ExerciseContext:    models.ExerciseContext{DB: db},
+		MuscleGroupContext: models.MuscleGroupContext{DB: db},
+		EMGContext:         models.ExerciseMuscleGroupsContext{DB: db},
 	}
+
+	gin.DisableConsoleColor()
+	if err := os.MkdirAll("/var/log/jaimio/", os.ModePerm); err != nil {
+		log.Fatal(err)
+	}
+	file, _ := os.Create("/var/log/jaimio/gin.log")
+	gin.DefaultWriter = io.MultiWriter(file)
 
 	router := gin.Default()
 
 	config := cors.DefaultConfig()
-	config.AllowOrigins = []string{"http://localhost:3000"}
+	config.AllowOrigins = []string{
+		"http://localhost", "http://localhost:3000",
+	}
 	router.Use(cors.New(config))
 
-	router.GET("/health", controllers.GetHealth)
 	api := router.Group("/api/v1")
 	{
+		api.GET("/health", controllers.GetHealth)
 		api.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 		api.GET("/exercise", env.GetAllExercises)
